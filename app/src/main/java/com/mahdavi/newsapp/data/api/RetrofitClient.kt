@@ -4,19 +4,17 @@ import com.mahdavi.newsapp.BuildConfig
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class RetrofitClient {
-    companion object {
-        private var instance: Api? = null
+object RetrofitBuilder {
 
-        @Synchronized
-        fun getInstance(): Api {
-            if (instance == null)
-                instance = Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(BuildConfig.BASE_URL)
-                    .build()
-                    .create(Api::class.java)
-            return instance as Api
-        }
+    private const val BASE_URL = BuildConfig.BASE_URL
+
+    private fun getRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
     }
+
+    val apiService: ApiService = getRetrofit().create(ApiService::class.java)
+
 }
