@@ -36,6 +36,7 @@ class NewsRepositoryImpl(private val remoteDataSource: RemoteDataSource = Remote
                         }
                     } else {
                         Result.build {
+                            //TODO: make error model
                             null to null
                         }
                     }
