@@ -13,3 +13,5 @@ interface ApiService {
         @Query("apiKey") key: String = BuildConfig.API_KEY
     ): Response<News>
 }
+
+

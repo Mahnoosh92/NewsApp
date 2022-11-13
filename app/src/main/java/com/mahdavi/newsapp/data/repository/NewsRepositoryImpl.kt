@@ -1,15 +1,15 @@
 package com.mahdavi.newsapp.data.repository
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSourceImpl
 import com.mahdavi.newsapp.data.model.remote.News
-import com.mahdavi.newsapp.data.model.local.Result
+import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import com.mahdavi.newsapp.data.model.remote.Error
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.retry
+import com.mahdavi.newsapp.data.model.remote.MyError
+import com.mahdavi.newsapp.utils.extensions.getApiError
+import kotlinx.coroutines.flow.*
 import java.io.IOException
 
 
@@ -18,33 +18,24 @@ class NewsRepositoryImpl(private val remoteDataSource: RemoteDataSource = Remote
 
     override suspend fun getNews(
         topic: String
-    ): Result<Exception, Pair<News?, Error?>>? {
+    ): ResultWrapper<Exception, News?>? {
         return try {
-            var result: Result<Exception, Pair<News?, Error?>>? = null
+            var result: ResultWrapper<Exception, News?>? = null
             remoteDataSource.getNews(topic)
-                .retry(2) { throwable ->
-                    throwable is IOException
-                }.flowOn(Dispatchers.IO)
-                .catch { e ->
-                    result = Result.build {
-                        throw e
-                    }
-                }.collect {
-                    result = if (it.isSuccessful) {
-                        Result.build {
-                            it.body() to null
-                        }
-                    } else {
-                        Result.build {
-                            //TODO: make error model
-                            null to null
+                .flowOn(Dispatchers.IO)
+                .onEach { response ->
+                    result = ResultWrapper.build {
+                        if (response.isSuccessful) {
+                            response.body()
+                        } else {
+                            throw Exception(response.getApiError()?.message)
                         }
                     }
-                }
+                }.collect()
             result
-        } catch (exception: Exception) {
-            Result.build {
-                throw exception
+        } catch (e: Exception) {
+            ResultWrapper.build {
+                throw e
             }
         }
     }
