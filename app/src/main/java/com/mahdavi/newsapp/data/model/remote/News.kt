@@ -19,4 +19,4 @@ data class Article(
     @SerializedName("content") val content: String?
 )
 
-data class Source(@SerializedName("Id") val id: Int?, @SerializedName("Name") val name: String?)
+data class Source(@SerializedName("Id") val id: String?, @SerializedName("Name") val name: String?)

@@ -6,9 +6,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.material.snackbar.Snackbar
+import com.mahdavi.newsapp.R
+import com.mahdavi.newsapp.data.model.local.NetworkResult
 import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
 import com.mahdavi.newsapp.databinding.FragmentHomeBinding
 import com.mahdavi.newsapp.ui.BaseFragment
+import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment() {
 
@@ -31,7 +38,28 @@ class HomeFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-        viewModel.
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.articles.collect { result ->
+                    when (result) {
+                        is NetworkResult.Success -> {
+                            val x = result.data
+                            //TODO: add recycler view
+                        }
+                        is NetworkResult.Error -> {
+                            Snackbar.make(
+                                requireView(),
+                                result.message ?: getString(R.string.error_general),
+                                Snackbar.LENGTH_LONG
+                            ).show()
+                        }
+                        is NetworkResult.Loading -> {
+                            //TODO: add loader
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun setupObservers() {

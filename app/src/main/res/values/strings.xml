@@ -2,5 +2,8 @@
     <string name="app_name">NewsApp</string>
     <string name="title_home">Home</string>
     <string name="title_settings">Settings</string>
-    <string name="title_favorite">Fvorite</string>
+    <string name="title_favorite">Favorite</string>
+
+    <!-- error -->
+    <string name="error_general">Something went wrong!</string>
 </resources>

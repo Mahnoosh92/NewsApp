@@ -11,22 +11,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.BufferOverflow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(private val newsRepository: NewsRepository) : ViewModel() {
 
     private var _articles = MutableStateFlow<NetworkResult<List<Article?>>>(NetworkResult.Loading())
-    private val articles = _articles.asStateFlow()
+    val articles: StateFlow<NetworkResult<List<Article?>>>
+        get() = _articles.asStateFlow()
 
 
     init {
         getNews()
     }
+
 
     fun getNews(topic: String = "bitcoin") {
         viewModelScope.launch {
@@ -49,8 +48,8 @@ class HomeViewModel(private val newsRepository: NewsRepository) : ViewModel() {
 
 class HomeViewModelFactory(private val newsRepository: NewsRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModelFactory::class.java)) {
-            @Suppress("UNCHECKED_CAST") return HomeViewModelFactory(newsRepository) as T
+        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
+            @Suppress("UNCHECKED_CAST") return HomeViewModel(newsRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
