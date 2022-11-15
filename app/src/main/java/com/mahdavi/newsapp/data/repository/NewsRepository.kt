@@ -1,11 +1,11 @@
 package com.mahdavi.newsapp.data.repository
 
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
-import com.mahdavi.newsapp.data.model.remote.MyError
-import com.mahdavi.newsapp.data.model.remote.News
+import com.mahdavi.newsapp.data.model.remote.ArticleResponse
+import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
-    suspend fun getNews(
+    suspend fun getArticles(
         topic: String
-    ): ResultWrapper<Exception, News?>?
+    ): Flow<ResultWrapper<Exception, List<ArticleResponse?>>?>
 }

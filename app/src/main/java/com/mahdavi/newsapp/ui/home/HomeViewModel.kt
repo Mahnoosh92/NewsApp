@@ -2,23 +2,19 @@ package com.mahdavi.newsapp.ui.home
 
 import androidx.lifecycle.*
 import com.mahdavi.newsapp.data.model.local.NetworkResult
-import com.mahdavi.newsapp.data.model.local.ResultWrapper
-import com.mahdavi.newsapp.data.model.remote.Article
+import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Error
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Value
 import com.mahdavi.newsapp.data.repository.NewsRepository
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlin.coroutines.CoroutineContext
 
 class HomeViewModel(private val newsRepository: NewsRepository) : ViewModel() {
 
-    private var _articles = MutableStateFlow<NetworkResult<List<Article?>>>(NetworkResult.Loading())
-    val articles: StateFlow<NetworkResult<List<Article?>>>
+    private var _articles =
+        MutableStateFlow<NetworkResult<List<ArticleResponse?>>>(NetworkResult.Loading())
+    val articles: StateFlow<NetworkResult<List<ArticleResponse?>>>
         get() = _articles.asStateFlow()
 
 
@@ -27,21 +23,21 @@ class HomeViewModel(private val newsRepository: NewsRepository) : ViewModel() {
     }
 
 
-    fun getNews(topic: String = "bitcoin") {
+    private fun getNews(topic: String = "bitcoin") {
         viewModelScope.launch {
-            when (val result = newsRepository.getNews(topic)) {
-                is Value -> {
-                    result.value?.articles?.let {
-                        _articles.value = NetworkResult.Success(it)
-                    } ?: run { _articles.value = NetworkResult.Success(emptyList()) }
+            newsRepository.getArticles(topic).onEach { result ->
+                when (result) {
+                    is Value -> {
+                        _articles.value = NetworkResult.Success(result.value)
+                    }
+                    is Error -> {
+                        _articles.value = NetworkResult.Error(message = result.error.message)
+                    }
+                    else -> {
+                        throw  IllegalArgumentException("wrong args")
+                    }
                 }
-                is Error -> {
-                    _articles.value = NetworkResult.Error(message = result.error.message)
-                }
-                else -> {
-                    throw  IllegalArgumentException("wrong args")
-                }
-            }
+            }.collect()
         }
     }
 }

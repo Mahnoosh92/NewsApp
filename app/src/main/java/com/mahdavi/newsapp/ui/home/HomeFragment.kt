@@ -22,7 +22,7 @@ class HomeFragment : BaseFragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by activityViewModels {
+    private val viewModel: HomeViewModel by viewModels {
         HomeViewModelFactory(
             NewsRepositoryImpl()
         )
