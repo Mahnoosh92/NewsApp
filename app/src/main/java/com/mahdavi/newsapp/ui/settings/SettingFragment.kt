@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.mahdavi.newsapp.databinding.FragmentSettingsBinding
 import com.mahdavi.newsapp.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+
 
 class SettingFragment : BaseFragment() {
 

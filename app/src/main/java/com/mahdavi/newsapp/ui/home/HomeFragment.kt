@@ -15,6 +15,7 @@ import com.mahdavi.newsapp.data.model.local.NetworkResult
 import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
 import com.mahdavi.newsapp.databinding.FragmentHomeBinding
 import com.mahdavi.newsapp.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 class HomeFragment : BaseFragment() {
