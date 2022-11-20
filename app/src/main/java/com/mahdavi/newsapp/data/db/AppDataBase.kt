@@ -13,21 +13,5 @@ abstract class AppDataBase() : RoomDatabase() {
 
     abstract fun articleDao(): ArticleDao
 
-    companion object {
-        @Volatile
-        private var INSTANCE: AppDataBase? = null
-        fun getDatabase(context: Context): AppDataBase {
-            return INSTANCE ?: synchronized(this) {
-                val instance = Room.databaseBuilder(
-                    context.applicationContext,
-                    AppDataBase::class.java,
-                    "item_database"
-                )
-                    .fallbackToDestructiveMigration()
-                    .build()
-                INSTANCE = instance
-                return instance
-            }
-        }
-    }
+
 }

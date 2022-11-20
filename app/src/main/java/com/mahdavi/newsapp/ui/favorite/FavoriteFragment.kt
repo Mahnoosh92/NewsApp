@@ -10,7 +10,7 @@ import com.mahdavi.newsapp.databinding.FragmentFavoriteBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class FavoriteFragment : BaseFragment() {
     
     private var _binding: FragmentFavoriteBinding? = null

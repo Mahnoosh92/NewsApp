@@ -1,11 +1,11 @@
 package com.mahdavi.newsapp.data.dataSource.local
 
-import com.mahdavi.newsapp.NewsApplication
 import com.mahdavi.newsapp.data.db.ArticleDao
 import com.mahdavi.newsapp.data.model.local.entity.Article
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class LocalDataSourceImpl(private val articleDao: ArticleDao = NewsApplication.application().database.articleDao()) :
+class LocalDataSourceImpl @Inject constructor(private val articleDao: ArticleDao) :
     LocalDataSource {
     override suspend fun insertAll(articles: List<Article>) = flow {
         articleDao.insertAll(articles)

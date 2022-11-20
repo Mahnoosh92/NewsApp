@@ -1,11 +1,27 @@
 package com.mahdavi.newsapp.di
 
+import android.content.Context
 import android.provider.SyncStateContract
+import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
+
 import com.mahdavi.newsapp.BuildConfig.BASE_URL
+
+import com.mahdavi.newsapp.data.api.ApiService
+import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
+import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSourceImpl
+import com.mahdavi.newsapp.data.db.AppDataBase
+import com.mahdavi.newsapp.data.db.ArticleDao
+import com.mahdavi.newsapp.data.repository.NewsRepository
+import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -18,30 +34,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
-    /*@AuthInterceptorOkHttpClient
-    @Provides
-    fun provideAuthInterceptorOkHttpClient(
-        authInterceptor: AuthInterceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(authInterceptor)
-            .build()
-    }
-
-    @OtherInterceptorOkHttpClient
-    @Provides
-    fun provideOtherInterceptorOkHttpClient(
-        otherInterceptor: OtherInterceptor
-    ): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(otherInterceptor)
-            .build()
-    }*/
-
-    @Provides
-    @Named("base_url")
-    fun provideBaseUrl() = BuildConfig.BASE_URL
 
     @Singleton
     @Provides
@@ -61,23 +53,61 @@ object NetworkModule {
     @Singleton
     @Provides
     fun provideRetrofit(
-        @LoggingInterceptorOkHttpClient okHttpClient: OkHttpClient,
-        @Named("base_url") BASE_URL: String
+        @LoggingInterceptorOkHttpClient okHttpClient: OkHttpClient
     ): Retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(BASE_URL)
+        .baseUrl(BuildConfig.BASE_URL)
         .client(okHttpClient)
         .build()
 
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class AuthInterceptorOkHttpClient
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class OtherInterceptorOkHttpClient
+    @Provides
+    @Singleton
+    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
 
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class LoggingInterceptorOkHttpClient
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+object PersistenceModule {
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext appContext: Context) =
+        Room.databaseBuilder(
+            appContext,
+            AppDataBase::class.java,
+            "item_database"
+        ).build()
+
+    @Provides
+    @Singleton
+    fun provideArticleDao(db: AppDataBase) = db.articleDao()
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class DataSourceModule {
+
+    @Binds
+    abstract fun bindLocalDataSource(
+        localDataSourceImpl: LocalDataSourceImpl
+    ): LocalDataSource
+
+    @Binds
+    abstract fun bindRemoteDataSource(
+        remoteDataSourceImpl: RemoteDataSourceImpl
+    ): RemoteDataSource
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+
+    @Binds
+    abstract fun bindNewsRepository(
+        newsRepositoryImpl: NewsRepositoryImpl
+    ): NewsRepository
 }

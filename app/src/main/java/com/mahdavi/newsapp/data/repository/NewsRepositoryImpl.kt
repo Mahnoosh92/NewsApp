@@ -9,11 +9,12 @@ import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import com.mahdavi.newsapp.utils.extensions.getApiError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
+import javax.inject.Inject
 
 
-class NewsRepositoryImpl(
-    private val remoteDataSource: RemoteDataSource = RemoteDataSourceImpl.factory(),
-    private val localDataSource: LocalDataSource = LocalDataSourceImpl()
+class NewsRepositoryImpl @Inject constructor(
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource
 ) : NewsRepository {
 
     override suspend fun getArticles(topic: String): Flow<ResultWrapper<Exception, List<ArticleResponse?>>?> =

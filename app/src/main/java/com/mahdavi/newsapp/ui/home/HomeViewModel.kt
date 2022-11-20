@@ -6,11 +6,14 @@ import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Error
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Value
 import com.mahdavi.newsapp.data.repository.NewsRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class HomeViewModel(private val newsRepository: NewsRepository) : ViewModel() {
+@HiltViewModel
+class HomeViewModel @Inject constructor(private val newsRepository: NewsRepository) : ViewModel() {
 
     private var _articles =
         MutableStateFlow<NetworkResult<List<ArticleResponse?>>>(NetworkResult.Loading())
@@ -42,11 +45,3 @@ class HomeViewModel(private val newsRepository: NewsRepository) : ViewModel() {
     }
 }
 
-class HomeViewModelFactory(private val newsRepository: NewsRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST") return HomeViewModel(newsRepository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}

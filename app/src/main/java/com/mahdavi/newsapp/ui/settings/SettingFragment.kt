@@ -10,7 +10,7 @@ import com.mahdavi.newsapp.databinding.FragmentSettingsBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SettingFragment : BaseFragment() {
 
     private var _binding: FragmentSettingsBinding? = null
