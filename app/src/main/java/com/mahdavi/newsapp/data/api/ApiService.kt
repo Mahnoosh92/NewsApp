@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
-    @GET("everything")
+    @GET("latest_headlines")
     suspend fun getNews(
-        @Query("q") topic: String,
-        @Query("apiKey") key: String = BuildConfig.API_KEY
+        @Query("topic") topic: String,
+        @Query("countries") countries: String = "US"
     ): Response<News>
 }
 

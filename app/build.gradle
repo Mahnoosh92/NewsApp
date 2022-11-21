@@ -30,10 +30,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
         debug {
-            buildConfigField "String", "BASE_URL", "\"https://newsapi.org/v2/\""
+            buildConfigField "String", "BASE_URL", "\"https://api.newscatcherapi.com/v2/\""
         }
         release {
-            buildConfigField "String", "BASE_URL", "\"https://newsapi.org/v2/\""
+            buildConfigField "String", "BASE_URL", "\"https://api.newscatcherapi.com/v2/\""
         }
     }
     compileOptions {

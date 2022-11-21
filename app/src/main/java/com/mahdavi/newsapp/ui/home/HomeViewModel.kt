@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
     }
 
 
-    private fun getNews(topic: String = "bitcoin") {
+    private fun getNews(topic: String = "business") {
         viewModelScope.launch {
             newsRepository.getArticles(topic).onEach { result ->
                 when (result) {

@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.data.model.local.NetworkResult
@@ -26,6 +27,8 @@ class HomeFragment : BaseFragment() {
 
     private val viewModel: HomeViewModel by viewModels()
 
+    private lateinit var recyclerView: RecyclerView
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,8 +44,13 @@ class HomeFragment : BaseFragment() {
                 viewModel.articles.collect { result ->
                     when (result) {
                         is NetworkResult.Success -> {
-                            val x = result.data
+
                             //TODO: add recycler view
+                            recyclerView = binding.recycleView
+                            val adapter = HomeNewsAdapter()
+                            recyclerView.adapter = adapter
+                            adapter.submitList(result.data)
+
                         }
                         is NetworkResult.Error -> {
                             Snackbar.make(
