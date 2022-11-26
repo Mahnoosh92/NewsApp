@@ -20,11 +20,9 @@ class HomeViewModel @Inject constructor(private val newsRepository: NewsReposito
     val articles: StateFlow<NetworkResult<List<ArticleResponse?>>>
         get() = _articles.asStateFlow()
 
-
     init {
         getNews()
     }
-
 
     private fun getNews(topic: String = "business") {
         viewModelScope.launch {

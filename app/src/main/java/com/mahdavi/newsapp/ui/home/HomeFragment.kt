@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mahdavi.newsapp.R
@@ -47,7 +48,10 @@ class HomeFragment : BaseFragment() {
 
                             //TODO: add recycler view
                             recyclerView = binding.recycleView
-                            val adapter = HomeNewsAdapter()
+                            val adapter = HomeNewsAdapter() {
+                                val action = HomeFragmentDirections.actionHomeToDetailsFragment(it)
+                                findNavController().navigate(action)
+                            }
                             recyclerView.adapter = adapter
                             adapter.submitList(result.data)
 

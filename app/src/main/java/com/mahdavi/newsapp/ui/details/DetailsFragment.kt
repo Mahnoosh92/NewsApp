@@ -1,0 +1,29 @@
+package com.mahdavi.newsapp.ui.details
+
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.navigation.fragment.navArgs
+import com.mahdavi.newsapp.R
+import com.mahdavi.newsapp.databinding.FragmentDetailsBinding
+
+
+class DetailsFragment : Fragment() {
+
+    private lateinit var binding: FragmentDetailsBinding
+
+    private val args: DetailsFragmentArgs by navArgs()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        binding = FragmentDetailsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+
+}

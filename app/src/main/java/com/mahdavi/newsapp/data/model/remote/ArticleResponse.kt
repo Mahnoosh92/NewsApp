@@ -1,8 +1,11 @@
 package com.mahdavi.newsapp.data.model.remote
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import com.mahdavi.newsapp.data.model.local.entity.Article
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class ArticleResponse(
     @SerializedName("_id") val id: String?,
     @SerializedName("_score") val score: String?,
@@ -23,7 +26,7 @@ data class ArticleResponse(
     @SerializedName("title") val title: String?,
     @SerializedName("topic") val topic: String?,
     @SerializedName("twitter_account") val twitterAccount: String?
-) {
+): Parcelable {
     fun toArticle() = Article(
         id = id,
         score = score,

@@ -12,5 +12,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="appBackgroundColor">@color/black_50</item>
+    </style>
+
+    <style name="headline1" parent="Theme.MaterialComponents">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/black_600</item>
+        <item name="android:ellipsize">end</item>
+        <item name="fontFamily">@font/lato_black</item>
+
+    </style>
+
+    <style name="headline2" parent="Theme.MaterialComponents">
+        <item name="android:textSize">10dp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>
