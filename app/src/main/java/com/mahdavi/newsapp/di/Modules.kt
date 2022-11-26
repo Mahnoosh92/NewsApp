@@ -4,9 +4,6 @@ import android.content.Context
 import android.provider.SyncStateContract
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
-
-import com.mahdavi.newsapp.BuildConfig.BASE_URL
-
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
@@ -23,6 +20,8 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,35 +37,34 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    @LoggingInterceptorOkHttpClient
-    fun provideOkHttpClient() = if (BuildConfig.DEBUG) {
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        OkHttpClient.Builder().addInterceptor(loggingInterceptor).build()
-    } else {
-        OkHttpClient.Builder().build()
-    }
+    fun provideOkHttpLoggingInterceptor() =
+        HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
 
     @Provides
     @Singleton
-    @AuthenticationInterceptorOkHttpClient
-    fun provideAuthenticationOkHttpClient() =
-        OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
+    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+        val builder = OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS)
             .followRedirects(true).followSslRedirects(true).addInterceptor { chain ->
                 val newRequest =
-                    chain.request().newBuilder().addHeader("x-api-key", BuildConfig.API_KEY).build()
+                    chain.request().newBuilder().addHeader("x-api-key", BuildConfig.API_KEY)
+                        .build()
                 chain.proceed(newRequest)
-            }.build()
-
+            }
+        return if (BuildConfig.DEBUG) {
+            builder.addInterceptor(loggingInterceptor)
+                .build()
+        } else {
+            builder.build()
+        }
+    }
 
     @Singleton
     @Provides
     fun provideRetrofit(
-        @LoggingInterceptorOkHttpClient loggingOkHttpClient: OkHttpClient,
-        @AuthenticationInterceptorOkHttpClient authOkHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ): Retrofit = Retrofit.Builder().addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(BuildConfig.BASE_URL).client(loggingOkHttpClient).client(authOkHttpClient).build()
+        .baseUrl(BuildConfig.BASE_URL).client(okHttpClient).build()
 
     @Provides
     @Singleton
@@ -122,3 +120,44 @@ abstract class RepositoryModule {
         newsRepositoryImpl: NewsRepositoryImpl
     ): NewsRepository
 }
+
+@InstallIn(SingletonComponent::class)
+@Module
+object CoroutinesDispatchersModule {
+
+    @DefaultDispatcher
+    @Provides
+    @Singleton
+    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @IoDispatcher
+    @Provides
+    @Singleton
+    fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    @MainDispatcher
+    @Provides
+    @Singleton
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+    @MainImmediateDispatcher
+    @Provides
+    @Singleton
+    fun providesMainImmediateDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
+}
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class DefaultDispatcher
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class IoDispatcher
+
+@Retention(AnnotationRetention.RUNTIME)
+@Qualifier
+annotation class MainDispatcher
+
+@Retention(AnnotationRetention.BINARY)
+@Qualifier
+annotation class MainImmediateDispatcher
