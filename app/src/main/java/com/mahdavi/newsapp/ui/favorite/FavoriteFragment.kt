@@ -31,7 +31,7 @@ class FavoriteFragment : BaseFragment() {
 
     }
 
-    override fun setupObservers() {
+    override fun setupCollectors() {
 
     }
 

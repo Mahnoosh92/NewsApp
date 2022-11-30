@@ -5,7 +5,7 @@ import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import kotlinx.coroutines.flow.Flow
 
 interface NewsRepository {
-    suspend fun getArticles(
+    suspend fun getNews(
         topic: String
     ): Flow<ResultWrapper<Exception, List<ArticleResponse?>>?>
 }

@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface LocalDataSource {
 
-    suspend fun update(articles: List<Article>): Flow<Unit>
+    fun update(articles: List<Article>): Flow<Unit>
 
     fun getArticles(): Flow<List<Article>>
 

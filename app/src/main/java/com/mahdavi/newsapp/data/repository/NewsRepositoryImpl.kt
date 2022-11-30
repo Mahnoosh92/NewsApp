@@ -3,11 +3,13 @@ package com.mahdavi.newsapp.data.repository
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
+import com.mahdavi.newsapp.data.model.local.entity.Article
 import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import com.mahdavi.newsapp.di.IoDispatcher
 import com.mahdavi.newsapp.utils.extensions.getApiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
+import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -17,70 +19,64 @@ class NewsRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : NewsRepository {
 
-    override suspend fun getArticles(topic: String): Flow<ResultWrapper<Exception, List<ArticleResponse?>>?> =
+    override suspend fun getNews(topic: String): Flow<ResultWrapper<Exception, List<ArticleResponse?>>?> =
         flow {
-            getNews(topic)
-            localDataSource.getArticles()
+            remoteDataSource.getNews(topic)
                 .flowOn(ioDispatcher)
-                .onEach { articles ->
-                    emit(ResultWrapper.build {
-                        articles.map {
-                            it.toArticleResponse()
+                .map { response ->
+                    try {
+                        if (!response.isSuccessful) {
+                            throw Exception(response.getApiError()?.message)
                         }
-                    })
+                    } catch (e: java.lang.Exception) {
+                        emit(ResultWrapper.build {
+                            throw e
+                        })
+                    }
+                    response.body()?.articles
                 }
-                .onCompletion { Timber.i("result is received") }
+                .map { articleResponseList ->
+                    clearDataBase()
+                        .flowOn(ioDispatcher)
+                        .onCompletion {
+                            articleResponseList?.let {
+                                updateDataBase(it.filterNotNull()
+                                    .map { articleResponse ->
+                                        articleResponse.toArticle()
+                                    })
+                                    .flowOn(ioDispatcher)
+                                    .catch { error -> Timber.e(error) }
+                                    .collect()
+                            }
+                        }
+                        .catch { error -> Timber.e(error) }.collect()
+                }
+                .map {
+                    localDataSource.getArticles()
+                        .flowOn(ioDispatcher)
+                        .onEach {
+                            emit(ResultWrapper.build {
+                                it.map { article ->
+                                    article.toArticleResponse()
+                                }
+                            })
+                        }
+                        .catch { error ->
+                            emit(ResultWrapper.build {
+                                throw error
+                            })
+                        }.collect()
+                }
                 .catch { error ->
-                    Timber.e(error)
                     emit(ResultWrapper.build {
                         throw error
                     })
                 }
                 .collect()
+
         }
 
-    private suspend fun getNews(topic: String) {
-        remoteDataSource.getNews(topic)
-            .flowOn(ioDispatcher)
-            .onEach { response ->
-                if (response.isSuccessful) {
-                    response.body()?.articles?.let { list ->
-                        // TODO: pagination must not get cleaned
-                        clearDatabase()
-                        updateDatabase(list)
-                    }
-                } else {
-                    throw Exception(response.getApiError()?.message)
-                }
-            }
-            .catch { error ->
-                Timber.e(error)
-                throw error
-            }
-            .collect()
-    }
-
-    private suspend fun updateDatabase(list: List<ArticleResponse?>) {
-        localDataSource.update(list.filterNotNull().map { it.toArticle() })
-            .flowOn(ioDispatcher)
-            .onCompletion {
-                Timber.i("database updated")
-            }
-            .catch { error ->
-                Timber.e(error)
-                throw error
-            }
-            .collect()
-    }
-
-    private suspend fun clearDatabase() {
-        localDataSource.clear()
-            .flowOn(ioDispatcher)
-            .catch { error ->
-                Timber.e(error)
-                throw error
-            }
-            .collect()
-    }
+    private fun clearDataBase() = localDataSource.clear()
+    private fun updateDataBase(list: List<Article>) = localDataSource.update(list)
 }
 

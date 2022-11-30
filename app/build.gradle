@@ -96,6 +96,12 @@ dependencies {
     implementation("androidx.room:room-ktx:2.4.3")
     kapt "androidx.room:room-compiler:2.4.3"
 
+    // Lottie
+    implementation 'com.airbnb.android:lottie:4.1.0'
+
+    //Shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
+    
     // Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'

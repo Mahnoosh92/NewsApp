@@ -9,7 +9,7 @@ import javax.inject.Inject
 class LocalDataSourceImpl @Inject constructor(private val articleDao: ArticleDao) :
     LocalDataSource {
 
-    override suspend fun update(articles: List<Article>) = flow {
+    override fun update(articles: List<Article>) = flow {
         articleDao.insertAll(articles)
         emit(Unit)
     }

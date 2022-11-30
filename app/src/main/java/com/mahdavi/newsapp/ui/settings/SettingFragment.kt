@@ -30,7 +30,7 @@ class SettingFragment : BaseFragment() {
 
     }
 
-    override fun setupObservers() {
+    override fun setupCollectors() {
 
     }
 

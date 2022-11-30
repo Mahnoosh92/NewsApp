@@ -6,12 +6,12 @@ import androidx.fragment.app.Fragment
 
 abstract class BaseFragment : Fragment() {
     abstract fun setupUi()
-    abstract fun setupObservers()
+    abstract fun setupCollectors()
     abstract fun setupListeners()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupUi()
-        setupObservers()
+        setupCollectors()
         setupListeners()
     }
 }

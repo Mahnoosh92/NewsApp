@@ -73,14 +73,6 @@ object NetworkModule {
 
 }
 
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class LoggingInterceptorOkHttpClient
-
-@Qualifier
-@Retention(AnnotationRetention.BINARY)
-annotation class AuthenticationInterceptorOkHttpClient
-
 @Module
 @InstallIn(SingletonComponent::class)
 object PersistenceModule {

@@ -1,21 +1,24 @@
 package com.mahdavi.newsapp.ui.home
 
+import android.provider.SyncStateContract.Helpers.update
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import coil.transform.CircleCropTransformation
+import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import com.mahdavi.newsapp.databinding.ItemNewsBinding
 
-class HomeNewsAdapter(private val update: (ArticleResponse) -> Unit) :
-    ListAdapter<ArticleResponse, RecyclerView.ViewHolder>(PlantDiffCallback()) {
+class HomeNewsAdapter(private val onClick: (ArticleResponse) -> Unit) :
+    ListAdapter<ItemArticleUiState, RecyclerView.ViewHolder>(PlantDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding =
             ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return NewsItemViewHolder(binding, update)
+        return NewsItemViewHolder(binding, onClick)
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -23,35 +26,57 @@ class HomeNewsAdapter(private val update: (ArticleResponse) -> Unit) :
     }
 }
 
-class NewsItemViewHolder(private val binding: ItemNewsBinding, update: (ArticleResponse) -> Unit) :
+class NewsItemViewHolder(
+    private val binding: ItemNewsBinding,
+    onClick: (ArticleResponse) -> Unit
+) :
     RecyclerView.ViewHolder(binding.root) {
-    var currentArticle: ArticleResponse? = null
+    private var currentUiState: ItemArticleUiState? = null
 
     init {
         binding.myCard.setOnClickListener {
-            currentArticle?.let {
-                update(it)
+            currentUiState?.let {
+                it.onClick(it.article)
+                onClick(it.article)
             }
         }
     }
 
-    fun bind(article: ArticleResponse) {
-        currentArticle = article
+    fun bind(
+        itemArticleUiState
+        : ItemArticleUiState
+    ) {
+        currentUiState = itemArticleUiState
+
         binding.apply {
-            imageId.load(article.media)
-            title.text = article.title
-            summary.text = article.summary
+            //TODO:placeholder and error and loader for coil
+            imageId.load(
+                itemArticleUiState
+                    .article.media
+            ){
+                crossfade(true)
+                placeholder(R.drawable.news)
+
+            }
+            title.text = itemArticleUiState
+                .article.title
+            summary.text = itemArticleUiState
+                .article.summary
         }
     }
 }
 
-private class PlantDiffCallback : DiffUtil.ItemCallback<ArticleResponse>() {
+private class PlantDiffCallback : DiffUtil.ItemCallback<ItemArticleUiState>() {
 
-    override fun areItemsTheSame(oldItem: ArticleResponse, newItem: ArticleResponse): Boolean {
-        return oldItem.id == newItem.id
+    override fun areItemsTheSame(
+        oldItem: ItemArticleUiState, newItem: ItemArticleUiState
+    ): Boolean {
+        return oldItem.article.id == newItem.article.id
     }
 
-    override fun areContentsTheSame(oldItem: ArticleResponse, newItem: ArticleResponse): Boolean {
+    override fun areContentsTheSame(
+        oldItem: ItemArticleUiState, newItem: ItemArticleUiState
+    ): Boolean {
         return oldItem == newItem
     }
 }
