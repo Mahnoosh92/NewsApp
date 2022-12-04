@@ -6,9 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.databinding.FragmentFavoriteBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FavoriteFragment : BaseFragment() {
@@ -17,6 +19,8 @@ class FavoriteFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: FavoriteViewModel by viewModels()
+
+    @Inject lateinit var sharedPreferenceDataSource: SharedPreferenceDataSource
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -28,7 +32,7 @@ class FavoriteFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-
+        binding.titleTv.text = sharedPreferenceDataSource.getValue("ali", 0).toString()
     }
 
     override fun setupCollectors() {

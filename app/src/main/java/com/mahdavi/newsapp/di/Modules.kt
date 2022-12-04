@@ -1,23 +1,22 @@
 package com.mahdavi.newsapp.di
 
 import android.content.Context
-import android.provider.SyncStateContract
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
+import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceHelperImpl
 import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
-import com.mahdavi.newsapp.data.db.ArticleDao
 import com.mahdavi.newsapp.data.repository.NewsRepository
 import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,7 +26,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -69,8 +67,6 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
-
-
 }
 
 @Module
@@ -111,6 +107,16 @@ abstract class RepositoryModule {
     abstract fun bindNewsRepository(
         newsRepositoryImpl: NewsRepositoryImpl
     ): NewsRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class SharedPreferencesModule {
+
+    @Binds
+    abstract fun bindSharedPreferencesHelper(
+        sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
+    ): SharedPreferenceDataSource
 }
 
 @InstallIn(SingletonComponent::class)
