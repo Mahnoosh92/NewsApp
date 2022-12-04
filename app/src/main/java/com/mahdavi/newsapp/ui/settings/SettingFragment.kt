@@ -6,8 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.mahdavi.newsapp.databinding.FragmentSettingsBinding
 import com.mahdavi.newsapp.ui.BaseFragment
+import com.mahdavi.newsapp.utils.extensions.action
+import com.mahdavi.newsapp.utils.extensions.shortSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,7 +38,9 @@ class SettingFragment : BaseFragment() {
     }
 
     override fun setupListeners() {
-
+        binding.profileButton.setOnClickListener{
+            findNavController().navigate(SettingFragmentDirections.actionSettingToProfileFragment())
+        }
     }
 
 

@@ -24,7 +24,11 @@
         android:id="@+id/setting"
         android:name="com.mahdavi.newsapp.ui.settings.SettingFragment"
         android:label="SettingFragment"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_setting_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/detailsFragment"
         android:name="com.mahdavi.newsapp.ui.details.DetailsFragment"
@@ -34,4 +38,9 @@
             android:name="article"
             app:argType="com.mahdavi.newsapp.data.model.remote.ArticleResponse" />
     </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.mahdavi.newsapp.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

@@ -11,4 +11,10 @@
     <string name="title_homeFragment">Title</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- settingFragment -->
+    <string name="button_profile_settingFragment">Profile</string>
+
+    <!-- profileFragment -->
+    <string name="name_title_profileFragment">Name</string>
+    <string name="family_title_profileFragment">Family</string>
 </resources>

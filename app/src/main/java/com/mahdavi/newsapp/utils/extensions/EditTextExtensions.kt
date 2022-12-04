@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 fun TextInputEditText.getQueryTextChangeStateFlow(): StateFlow<String> {
     val query = MutableStateFlow("")
-
+    //anonymous inner class
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             /* No-Op */

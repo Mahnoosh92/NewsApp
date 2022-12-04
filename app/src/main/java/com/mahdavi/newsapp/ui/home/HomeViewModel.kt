@@ -3,6 +3,7 @@ package com.mahdavi.newsapp.ui.home
 import android.os.Parcelable
 import android.util.Log
 import androidx.lifecycle.*
+import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Error
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Value
 import com.mahdavi.newsapp.data.model.remote.ArticleResponse
@@ -13,6 +14,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,15 +34,24 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    init {
-        getNews()
-    }
-
-    private fun getNews(topic: String = "business") {
+    fun getQuery(input: StateFlow<String>) {
         viewModelScope.launch(exceptionHandler) {
-            newsRepository.getNews(topic)
-                .flowOn(ioDispatcher)
-                .onEach { result ->
+            input.debounce(500L)
+                .distinctUntilChanged()
+                .filter {
+                    it.isNotEmpty()
+                }
+                .flatMapLatest { topic ->
+                    newsRepository.getNews(topic)
+                }
+                .catch { error ->
+                    Timber.e(error)
+                    _articles.update { homeUiState ->
+                        homeUiState.copy(
+                            error = error.message, loading = false
+                        )
+                    }
+                }.collect { result ->
                     when (result) {
                         is Value -> {
                             _articles.update { homeUiState ->
@@ -56,8 +67,7 @@ class HomeViewModel @Inject constructor(
                         is Error -> {
                             _articles.update { homeUiState ->
                                 homeUiState.copy(
-                                    error = result.error.message,
-                                    loading = false
+                                    error = result.error.message, loading = false
                                 )
                             }
                         }
@@ -65,36 +75,14 @@ class HomeViewModel @Inject constructor(
                             throw  IllegalArgumentException("wrong args")
                         }
                     }
-                }.catch { error ->
-                    Timber.e(error)
-
                 }
-                .collect()
         }
     }
-// [1, 2,3,4] [[1], [2], [3], [4]] // https://medium.com/huawei-developers/instant-search-using-kotlin-flow-in-search-kit-a7c60233b881
-    fun getQuery(input: StateFlow<String>) {
-        input
-            .debounce(300L)
-            .distinctUntilChanged()
-            .map {
-                (1..5).asFlow()
-            }
-            .map { it.collect()
-                7
-            }
-            .map {
-
-            }
-
-    }
-
 }
 
 @Parcelize
 data class ItemArticleUiState(
-    val article: ArticleResponse,
-    val onClick: (ArticleResponse) -> Unit
+    val article: ArticleResponse, val onClick: (ArticleResponse) -> Unit
 ) : Parcelable
 
 data class HomeUiState(

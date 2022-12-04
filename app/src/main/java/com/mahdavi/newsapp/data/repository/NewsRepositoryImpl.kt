@@ -28,7 +28,7 @@ class NewsRepositoryImpl @Inject constructor(
                         if (!response.isSuccessful) {
                             throw Exception(response.getApiError()?.message)
                         }
-                    } catch (e: java.lang.Exception) {
+                    } catch (e: Exception) {
                         emit(ResultWrapper.build {
                             throw e
                         })
@@ -49,7 +49,8 @@ class NewsRepositoryImpl @Inject constructor(
                                     .collect()
                             }
                         }
-                        .catch { error -> Timber.e(error) }.collect()
+                        .catch { error -> Timber.e(error) }
+                        .collect()
                 }
                 .map {
                     localDataSource.getArticles()
@@ -73,7 +74,6 @@ class NewsRepositoryImpl @Inject constructor(
                     })
                 }
                 .collect()
-
         }
 
     private fun clearDataBase() = localDataSource.clear()
