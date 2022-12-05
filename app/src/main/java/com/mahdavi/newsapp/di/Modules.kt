@@ -1,6 +1,14 @@
 package com.mahdavi.newsapp.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.preferences.SharedPreferencesMigration
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.preferencesDataStore
+import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.data.api.ApiService
@@ -13,6 +21,7 @@ import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
 import com.mahdavi.newsapp.data.repository.NewsRepository
 import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
+import com.mahdavi.newsapp.utils.extensions.myDataStore
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -20,7 +29,9 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -28,6 +39,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
+
+private const val USER_PREFERENCES = "user_preferences"
+
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -45,13 +59,11 @@ object NetworkModule {
             .readTimeout(30, TimeUnit.SECONDS).writeTimeout(30, TimeUnit.SECONDS)
             .followRedirects(true).followSslRedirects(true).addInterceptor { chain ->
                 val newRequest =
-                    chain.request().newBuilder().addHeader("x-api-key", BuildConfig.API_KEY)
-                        .build()
+                    chain.request().newBuilder().addHeader("x-api-key", BuildConfig.API_KEY).build()
                 chain.proceed(newRequest)
             }
         return if (BuildConfig.DEBUG) {
-            builder.addInterceptor(loggingInterceptor)
-                .build()
+            builder.addInterceptor(loggingInterceptor).build()
         } else {
             builder.build()
         }
@@ -82,6 +94,22 @@ object PersistenceModule {
     @Provides
     @Singleton
     fun provideArticleDao(db: AppDataBase) = db.articleDao()
+
+    @Provides
+    @Singleton
+    fun provideMyDataStorePreferences(
+        @ApplicationContext context: Context
+    ): DataStore<Preferences> = context.myDataStore
+
+    @Singleton
+    @Provides
+    fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
+        return PreferenceDataStoreFactory.create(corruptionHandler = ReplaceFileCorruptionHandler(
+            produceNewData = { emptyPreferences() }),
+            migrations = listOf(SharedPreferencesMigration(appContext, USER_PREFERENCES)),
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
+            produceFile = { appContext.preferencesDataStoreFile(USER_PREFERENCES) })
+    }
 }
 
 @Module
