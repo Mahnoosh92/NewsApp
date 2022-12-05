@@ -78,6 +78,11 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
+    fun consume() {
+        _articles.update { homeUiState ->
+            homeUiState.copy(error = null)
+        }
+    }
 }
 
 @Parcelize
@@ -88,6 +93,6 @@ data class ItemArticleUiState(
 data class HomeUiState(
     val data: List<ItemArticleUiState>? = null,
     val error: String? = null,
-    val loading: Boolean = true
+    val loading: Boolean? = null
 )
 

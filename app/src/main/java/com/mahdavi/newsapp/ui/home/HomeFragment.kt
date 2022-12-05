@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +30,7 @@ class HomeFragment : BaseFragment(), MenuProvider {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     private lateinit var menu: Menu
 
@@ -45,9 +46,11 @@ class HomeFragment : BaseFragment(), MenuProvider {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.articles.collectLatest { homeUiState ->
                     //TODO:Loading
-                    if (homeUiState.loading) {
-                        binding.recycleView.visibility = View.GONE
-                        binding.shimmerFrameLayout.visibility = View.VISIBLE
+                    homeUiState.loading?.let {
+                        if (homeUiState.loading) {
+                            binding.recycleView.visibility = View.GONE
+                            binding.shimmerFrameLayout.visibility = View.VISIBLE
+                        }
                     }
                     homeUiState.data?.let {
                         /*val adapter = HomeNewsAdapter {
@@ -79,6 +82,7 @@ class HomeFragment : BaseFragment(), MenuProvider {
                                 this.dismiss()
                             }
                         }
+                        viewModel.consume()
                     }
                 }
             }

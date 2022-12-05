@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         //top toolbar
-        setSupportActionBar(findViewById(com.mahdavi.newsapp.R.id.my_toolbar))
+        setSupportActionBar(findViewById(R.id.my_toolbar))
 
         //bottom navbar
         val navView: BottomNavigationView = binding.navView
@@ -64,6 +64,12 @@ class MainActivity : AppCompatActivity() {
                 else -> hideBottomNav()
             }
         }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.splashFragment -> hideAppbar()
+                else -> showAppbar()
+            }
+        }
     }
 
     private fun showBottomNav() {
@@ -72,6 +78,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun hideBottomNav() {
         binding.navView.visibility = View.GONE
+    }
+    private fun showAppbar() {
+        binding.appbar.visibility= View.VISIBLE
+    }
+
+    private fun hideAppbar() {
+        binding.appbar.visibility = View.GONE
     }
 
     override fun onSupportNavigateUp(): Boolean {

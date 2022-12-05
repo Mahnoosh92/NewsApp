@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         app:lottie_autoPlay="true"
         app:lottie_loop="true"
-        app:lottie_colorFilter="@color/black_50"
+        app:lottie_colorFilter="@color/black_200"
         app:lottie_rawRes="@raw/loading" />
 
 
