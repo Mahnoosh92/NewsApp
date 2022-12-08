@@ -14,6 +14,8 @@ import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.auth.AuthLocalDataSource
+import com.mahdavi.newsapp.data.dataSource.local.auth.AuthLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceHelperImpl
 import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
@@ -21,11 +23,16 @@ import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
 import com.mahdavi.newsapp.data.repository.NewsRepository
 import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
+import com.mahdavi.newsapp.data.repository.auth.AuthRepository
+import com.mahdavi.newsapp.data.repository.auth.AuthRepositoryImpl
 import com.mahdavi.newsapp.utils.extensions.myDataStore
+import com.mahdavi.newsapp.utils.validate.Validate
+import com.mahdavi.newsapp.utils.validate.ValidateImpl
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
@@ -95,11 +102,11 @@ object PersistenceModule {
     @Singleton
     fun provideArticleDao(db: AppDataBase) = db.articleDao()
 
-    @Provides
-    @Singleton
-    fun provideMyDataStorePreferences(
-        @ApplicationContext context: Context
-    ): DataStore<Preferences> = context.myDataStore
+//    @Provides
+//    @Singleton
+//    fun provideMyDataStorePreferences(
+//        @ApplicationContext context: Context
+//    ): DataStore<Preferences> = context.myDataStore
 
     @Singleton
     @Provides
@@ -125,6 +132,11 @@ abstract class DataSourceModule {
     abstract fun bindRemoteDataSource(
         remoteDataSourceImpl: RemoteDataSourceImpl
     ): RemoteDataSource
+
+    @Binds
+    abstract fun bindAuthDataSource(
+        authLocalDataSourceImpl : AuthLocalDataSourceImpl
+    ): AuthLocalDataSource
 }
 
 @Module
@@ -135,16 +147,32 @@ abstract class RepositoryModule {
     abstract fun bindNewsRepository(
         newsRepositoryImpl: NewsRepositoryImpl
     ): NewsRepository
+
+    @Binds
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 }
 
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class SharedPreferencesModule {
 
+    @Singleton
     @Binds
     abstract fun bindSharedPreferencesHelper(
         sharedPreferenceHelperImpl: SharedPreferenceHelperImpl
     ): SharedPreferenceDataSource
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+abstract class UtilsModule {
+
+    @Binds
+    abstract fun bindValidator(
+        validateImpl: ValidateImpl
+    ): Validate
 }
 
 @InstallIn(SingletonComponent::class)

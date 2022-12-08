@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
                 R.id.splashFragment -> hideAppbar()
+                R.id.loginFragment -> hideAppbar()
                 else -> showAppbar()
             }
         }
@@ -88,7 +89,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onSupportNavigateUp(): Boolean {
-
         return navController.navigateUp(appBarConfiguration)
                 || super.onSupportNavigateUp()
     }

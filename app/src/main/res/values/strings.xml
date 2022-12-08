@@ -6,6 +6,11 @@
 
     <!-- error -->
     <string name="error_general">Something went wrong!</string>
+    <string name="text_validation_success">Validation is successful</string>
+    <string name="text_validation_error_empty_field">Cannot be empty</string>
+    <string name="text_validation_error_email">Email is not valid</string>
+    <string name="text_validation_error_password">Password must contain at least 1 special character and 4 characters</string>
+    <string name="text_validation_error_phone">Phone is not valid</string>
 
     <!-- homeFragment -->
     <string name="title_homeFragment">Title</string>
@@ -17,4 +22,18 @@
     <!-- profileFragment -->
     <string name="name_title_profileFragment">Name</string>
     <string name="family_title_profileFragment">Family</string>
+
+    <!-- loginFragment -->
+    <string name="title_loginFragment">Login</string>
+    <string name="signup_button_loginFragment">Signup</string>
+    <string name="hint_username_loginFragment">Username</string>
+    <string name="hint_password_loginFragment">Password</string>
+    <string name="other_login_loginFragment">or login with</string>
+    <string name="facebook_loginFragment">Facebook</string>
+    <string name="twitter_loginFragment">Twitter</string>
+    <!-- loginFragment -->
+    <string name="title_registerFragment">Register</string>
+    <string name="hint_username_registerFragment">Username</string>
+    <string name="hint_password_registerFragment">Password</string>
+
 </resources>

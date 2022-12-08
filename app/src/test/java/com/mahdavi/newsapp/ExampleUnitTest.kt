@@ -1,5 +1,8 @@
 package com.mahdavi.newsapp
 
+
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.test.runTest
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -10,8 +13,14 @@ import org.junit.Assert.*
  * See [testing documentation](http://d.android.com/tools/testing).
  */
 class ExampleUnitTest {
+    suspend fun fetchData(): String {
+        delay(1000L)
+        return "Hello world"
+    }
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun dataShouldBeHelloWorld() = runTest {
+        val data = fetchData()
+        assertEquals("Hello world", data)
     }
 }

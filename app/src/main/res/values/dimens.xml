@@ -2,6 +2,8 @@
 <resources>
     <!--    radius   -->
     <dimen name="radius_20">20dp</dimen>
+    <dimen name="radius_30">30dp</dimen>
+    <dimen name="radius_50">50dp</dimen>
 
     <!-- margin -->
     <dimen name="margin_8">8dp</dimen>
@@ -10,11 +12,23 @@
     <!-- padding -->
     <dimen name="padding_8">8dp</dimen>
     <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_18">18dp</dimen>
+    <dimen name="padding_20">20dp</dimen>
+    <dimen name="padding_22">22dp</dimen>
+    <dimen name="padding_24">24dp</dimen>
 
     <!-- font size -->
     <dimen name="font_size_12">12sp</dimen>
     <dimen name="font_size_16">16sp</dimen>
+    <dimen name="font_size_18">18sp</dimen>
+    <dimen name="font_size_20">20sp</dimen>
+    <dimen name="font_size_22">22sp</dimen>
+    <dimen name="font_size_24">24sp</dimen>
+    <dimen name="font_size_26">24sp</dimen>
 
+    <!-- elevation -->
+    <dimen name="elevation_8">8dp</dimen>
+    <dimen name="elevation_10">10dp</dimen>
     <!-- home -->
     <dimen name="newsImageSize">120dp</dimen>
     <!-- shimmer -->
@@ -23,4 +37,6 @@
     <dimen name="placeholderTextHeight">8dp</dimen>
     <dimen name="padding_10">10dp</dimen>
 
+    <!-- login -->
+    <dimen name="image_back_login">300dp</dimen>
 </resources>

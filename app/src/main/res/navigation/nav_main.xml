@@ -6,4 +6,6 @@
 
     <include app:graph="@navigation/nav_auth" />
 
+    <include app:graph="@navigation/nav_dashboard" />
+
 </navigation>

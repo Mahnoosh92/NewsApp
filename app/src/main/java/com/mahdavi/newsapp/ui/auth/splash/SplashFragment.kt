@@ -5,9 +5,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.mahdavi.newsapp.R
+import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,7 +25,8 @@ class SplashFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch{
 
             delay(3000)
-            findNavController().navigate(R.id.action_splashFragment_to_nav_graph)
+
+            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
         }
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
