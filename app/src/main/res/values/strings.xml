@@ -6,6 +6,7 @@
 
     <!-- error -->
     <string name="error_general">Something went wrong!</string>
+    <string name="error_general_input">Please check your inputs!</string>
     <string name="text_validation_success">Validation is successful</string>
     <string name="text_validation_error_empty_field">Cannot be empty</string>
     <string name="text_validation_error_email">Email is not valid</string>

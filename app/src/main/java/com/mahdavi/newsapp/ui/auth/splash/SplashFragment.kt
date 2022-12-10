@@ -22,13 +22,15 @@ class SplashFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        viewLifecycleOwner.lifecycleScope.launch{
+        return inflater.inflate(R.layout.fragment_splash, container, false)
+    }
 
-            delay(3000)
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewLifecycleOwner.lifecycleScope.launch {
+            delay(1000)
             findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
         }
-        return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
 

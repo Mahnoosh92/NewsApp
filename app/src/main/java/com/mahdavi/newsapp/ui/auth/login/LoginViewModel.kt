@@ -16,8 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-    private val validator: Validate
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private var _loginState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())

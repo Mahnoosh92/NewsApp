@@ -33,11 +33,6 @@ class LoginFragment : BaseFragment() {
 
     private val viewModel: LoginViewModel by activityViewModels()
 
-
-    init {
-
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {

@@ -44,9 +44,10 @@ class EmailValidator(private val email: String) : IValidator {
 class PasswordValidator(private val password: String) : IValidator {
     private val passwordPattern = Pattern.compile(
         "^" +
-                "(?=.*[@#$%^&+=])" +  // at least 1 special character
-                "(?=\\S+$)" +  // no white spaces
-                ".{4,}" +  // at least 4 characters
+                "(?=.*[@#$%^&+!=])" + // at least 1 special character
+                "(?=\\S+$)" + // no white spaces
+                "(?=\\S+$)" + //no white spaces
+                ".{4,}" + // at least 4 characters
                 "$"
     )
 
@@ -71,7 +72,7 @@ class PhoneValidator(private val phone: String) : IValidator {
 
 data class ValidateResult(
     val isSuccess: Boolean,
-    @StringRes val message: Int
+    @StringRes val errorMessage: Int
 )
 
 interface IValidator {

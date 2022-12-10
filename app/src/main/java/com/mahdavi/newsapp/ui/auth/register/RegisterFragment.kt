@@ -5,17 +5,27 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.flowWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentLoginBinding
 import com.mahdavi.newsapp.databinding.FragmentRegisterBinding
 import com.mahdavi.newsapp.ui.BaseFragment
+import com.mahdavi.newsapp.ui.auth.login.LoginViewModel
+import com.mahdavi.newsapp.utils.extensions.getQueryTextStateFlow
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
 @AndroidEntryPoint
 class RegisterFragment : BaseFragment() {
 
     private var _binding: FragmentRegisterBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: RegisterViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,17 +36,44 @@ class RegisterFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-        with(binding) {
 
-        }
     }
 
+    //TODO: make background green when successful
     override fun setupCollectors() {
-        TODO("Not yet implemented")
+        viewModel.registrationUiState
+            .flowWithLifecycle(viewLifecycleOwner.lifecycle)
+            .onEach { registrationUiState ->
+                binding.apply {
+                    registerButton.isEnabled = registrationUiState.areInputsValid
+                    registrationUiState.emailInvalidationResult?.let {
+                        if (it.isSuccess) {
+                            usernameRegister.error = null
+                        } else {
+                            usernameRegister.error = getString(it.errorMessage)
+                        }
+                    }
+                    registrationUiState.passwordInvalidationResult?.let {
+                        if (it.isSuccess) {
+                            passwordRegister.error = null
+                        } else {
+                            passwordRegister.error = getString(it.errorMessage)
+                        }
+                    }
+                }
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun setupListeners() {
-        TODO("Not yet implemented")
+        binding.apply {
+            with(viewModel) {
+                validateRegisterInputs(
+                    username.getQueryTextStateFlow(),
+                    password.getQueryTextStateFlow()
+                )
+            }
+        }
     }
 
     override fun onDestroyView() {

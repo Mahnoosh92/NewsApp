@@ -11,7 +11,7 @@ fun TextInputEditText.getQueryTextChangeStateFlow(): StateFlow<String> {
     //anonymous inner class
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            /* No-Op */
+            /* NO-OP */
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -21,7 +21,7 @@ fun TextInputEditText.getQueryTextChangeStateFlow(): StateFlow<String> {
         }
 
         override fun afterTextChanged(p0: Editable?) {
-            /* No-Op */
+            /* NO-OP */
         }
     })
     return query
@@ -29,14 +29,13 @@ fun TextInputEditText.getQueryTextChangeStateFlow(): StateFlow<String> {
 
 fun TextInputEditText.getQueryTextStateFlow(): StateFlow<String> {
     val query = MutableStateFlow("")
-    //anonymous inner class
     this.addTextChangedListener(object : TextWatcher {
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            /* No-Op */
+            /* NO-OP */
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            /* No-Op */
+            /* NO-OP */
         }
 
         override fun afterTextChanged(p0: Editable?) {
