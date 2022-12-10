@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_back_login"
         android:scaleType="centerCrop"
-        android:src="@drawable/nature"
+        android:src="@drawable/login"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline

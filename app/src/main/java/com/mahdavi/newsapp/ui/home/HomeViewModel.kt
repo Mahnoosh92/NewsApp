@@ -36,7 +36,8 @@ class HomeViewModel @Inject constructor(
 
     fun getQuery(input: StateFlow<String>) {
         viewModelScope.launch(exceptionHandler) {
-            input.debounce(500L)
+            input
+                .debounce(500L)
                 .distinctUntilChanged()
                 .filter {
                     it.isNotEmpty()

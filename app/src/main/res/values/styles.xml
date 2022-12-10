@@ -22,7 +22,9 @@
         <item name="background">"@drawable/bg_edit_text"</item>
     </style>
     <style name="EditText">
-        <item name="android:textSize">@dimen/font_size_20</item>
+        <item name="android:textSize">@dimen/font_size_16</item>
         <item name="background">@null</item>
+        <item name="android:padding">@dimen/padding_8</item>
+
     </style>
 </resources>

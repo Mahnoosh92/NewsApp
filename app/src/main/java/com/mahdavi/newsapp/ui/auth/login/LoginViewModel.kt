@@ -1,13 +1,10 @@
 package com.mahdavi.newsapp.ui.auth.login
 
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.annotation.StringRes
+import androidx.lifecycle.*
+import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.di.IoDispatcher
-import com.mahdavi.newsapp.utils.PASSWORD
-import com.mahdavi.newsapp.utils.USERNAME
 import com.mahdavi.newsapp.utils.validate.Validate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,54 +24,57 @@ class LoginViewModel @Inject constructor(
     val loginState = _loginState.asStateFlow()
 
     fun login(username: String, password: String) {
-        viewModelScope.launch() {
-            getUser(USERNAME, PASSWORD)
-                .map {
-                    it
-                }
-                .collectLatest {
-                    val x = it
-                }
-//            authRepository.getUser(USERNAME, PASSWORD)
-//                .collectLatest {
-//                    it?.let {
-//                        if (it.username.isNullOrEmpty().not() && it.password.isNullOrEmpty()
-//                                .not()
-//                        ) {
-//                            if (it.username == username && it.password == password) {
-//                                _loginState.update { loginUiState ->
-//                                    loginUiState.copy(isLoggedIn = true)
-//                                }
-//                            } else {
-//                                _loginState.update { loginUiState ->
-//                                    loginUiState.copy(
-//                                        isLoggedIn = false,
-//                                        error = "some thing is wrong!"
-//                                    )
-//                                }
-//                            }
-//                        }
-//                    } ?: kotlin.run {
-//                        authRepository.loginUser(
-//                            usernameKey = USERNAME,
-//                            usernameValue = username,
-//                            passwordKey = PASSWORD,
-//                            passwordValue = password
-//                        ).collectLatest {
-//                            _loginState.update { loginUiState ->
-//                                loginUiState.copy(isLoggedIn = true)
-//                            }
-//                        }
-//
-//                    }
-//                }
-        }
+        viewModelScope.launch {
+            authRepository.getUser()
+                .map { user ->
+                    user?.let {
+                        if (it.username == username && it.password == password) {
+                            _loginState.update { loginUiState: LoginUiState ->
+                                loginUiState.copy(isLoggedIn = true)
+                            }
+                        } else {
+                            _loginState.update { loginUiState: LoginUiState ->
+                                loginUiState.copy(
+                                    isLoggedIn = false,
+                                    error = R.string.login_invalid_error
+                                )
+                            }
+                        }
+                    } ?: kotlin.run {
+                            authRepository.loginUser(
+                                usernameValue = username,
+                                passwordValue = password
+                            ).collect {
+                                _loginState.update { loginUiState: LoginUiState ->
+                                    loginUiState.copy(
+                                        isLoggedIn = true
+                                    )
+                                }
+                            }
 
+                        }
+                }
+                .catch {  }
+                .collect()
+        }
     }
 
-    fun getUser(usernameKey: String, passwordKey: String) =
-        authRepository.getUser(usernameKey, passwordKey)
+    fun validateLoginInputs(usernameFlow: Flow<String>, passwordFlow: Flow<String>) {
+        usernameFlow
+            .combine(passwordFlow) { username, password ->
+                username to password
+            }
+            .onEach {
+                _loginState.update { loginUiState ->
+                    loginUiState.copy(areInputsValid = it.first.isNotEmpty() && it.second.isNotEmpty())
+                }
+            }
+            .launchIn(viewModelScope)
+    }
 
+    data class LoginUiState(
+        val isLoggedIn: Boolean? = null,
+        @StringRes val error: Int = -1,
+        val areInputsValid: Boolean = false
+    )
 }
-
-data class LoginUiState(val isLoggedIn: Boolean? = null, val error: String? = null)

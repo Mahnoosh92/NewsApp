@@ -17,7 +17,7 @@ class ValidateImpl @Inject constructor() : Validate {
     }
 
     override fun validatePassword(password: String): ValidateResult {
-        return validate(EmailValidator(password))
+        return validate(PasswordValidator(password))
     }
 
     private fun validate(vararg validators: IValidator): ValidateResult {

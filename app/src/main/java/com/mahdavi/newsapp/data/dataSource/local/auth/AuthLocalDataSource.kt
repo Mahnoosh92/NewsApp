@@ -5,11 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface AuthLocalDataSource {
     suspend fun loginUser(
-        usernameKey: String,
         usernameValue: String,
-        passwordKey: String,
         passwordValue: String
     ): Flow<Unit>
 
-    fun getUser(usernameKey: String, passwordKey: String): Flow<User?>
+    fun getUser(): Flow<User?>
 }

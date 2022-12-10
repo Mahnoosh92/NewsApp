@@ -1,6 +1,7 @@
 package com.mahdavi.newsapp.data.dataSource.local.auth
 
 
+import android.service.autofill.UserData
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -12,28 +13,33 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+private const val USERNAME = "username"
+private const val PASSWORD = "password"
+
 class AuthLocalDataSourceImpl @Inject constructor(private val authDataStore: DataStore<Preferences>) :
     AuthLocalDataSource {
     override suspend fun loginUser(
-        usernameKey: String,
         usernameValue: String,
-        passwordKey: String,
         passwordValue: String
     ) = flow {
         authDataStore.edit { preferences ->
-            preferences[stringPreferencesKey(usernameKey)] = usernameValue
-            preferences[stringPreferencesKey(passwordKey)] = passwordValue
+            preferences[stringPreferencesKey(USERNAME)] = usernameValue
+            preferences[stringPreferencesKey(PASSWORD)] = passwordValue
         }
         emit(Unit)
     }
 
-    override fun getUser(usernameKey: String, passwordKey: String) =
+    override fun getUser() =
         authDataStore.data
             .map { preferences ->
                 // No type safety.
-                val username = preferences[stringPreferencesKey(usernameKey)] ?: ""
-                val password = preferences[stringPreferencesKey(passwordKey)] ?: ""
-                User(username, password)
+                var user: User? = null
+                val username = preferences[stringPreferencesKey(USERNAME)]
+                val password = preferences[stringPreferencesKey(PASSWORD)]
+                if (!username.isNullOrEmpty() && !password.isNullOrEmpty()) {
+                    user = User(username, password)
+                }
+                user
             }
 
 
