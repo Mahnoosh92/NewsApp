@@ -4,7 +4,7 @@ object InternalDeepLinkHandler {
     const val DOMAIN = "myapp://"
 
     const val AUTH = "${DOMAIN}auth"
-    const val DASHBOARD = "${DOMAIN}dashboard"
+    const val TABS = "${DOMAIN}tabs"
 
 
     fun makeCustomDeepLink(id: String): String {

@@ -38,9 +38,6 @@ class SettingFragment : BaseFragment() {
     }
 
     override fun setupListeners() {
-        binding.profileButton.setOnClickListener{
-            findNavController().navigate(SettingFragmentDirections.actionSettingToProfileFragment())
-        }
     }
 
 

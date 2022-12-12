@@ -5,16 +5,19 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.textfield.TextInputLayout
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentLoginBinding
 import com.mahdavi.newsapp.databinding.FragmentRegisterBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.ui.auth.login.LoginViewModel
 import com.mahdavi.newsapp.utils.extensions.getQueryTextStateFlow
+import com.mahdavi.newsapp.utils.extensions.setStrockColor
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -49,6 +52,7 @@ class RegisterFragment : BaseFragment() {
                     registrationUiState.emailInvalidationResult?.let {
                         if (it.isSuccess) {
                             usernameRegister.error = null
+                            usernameRegister.setStrockColor(R.color.green_100)
                         } else {
                             usernameRegister.error = getString(it.errorMessage)
                         }
@@ -56,6 +60,7 @@ class RegisterFragment : BaseFragment() {
                     registrationUiState.passwordInvalidationResult?.let {
                         if (it.isSuccess) {
                             passwordRegister.error = null
+                            passwordRegister.setStrockColor(R.color.green_100)
                         } else {
                             passwordRegister.error = getString(it.errorMessage)
                         }

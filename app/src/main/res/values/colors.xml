@@ -34,11 +34,8 @@
     <color name="black_900">#161719</color>
     <color name="black_1000">#131313</color>
     <color name="black_1100">#0d0d0d</color>
-
-
-
     <color name="transparent">#80000000</color>
 
-
+    <color name="green_100">#008000</color>
 
 </resources>

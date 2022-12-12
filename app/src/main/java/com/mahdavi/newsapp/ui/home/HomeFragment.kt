@@ -62,7 +62,7 @@ class HomeFragment : BaseFragment(), MenuProvider {
 
                         val callback = object : OnClickListener {
                             override fun onClick(articleResponse: ArticleResponse) {
-                                val action = HomeFragmentDirections.actionHomeToDetailsFragment(
+                                val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
                                     articleResponse
                                 )
                                 findNavController().navigate(action)

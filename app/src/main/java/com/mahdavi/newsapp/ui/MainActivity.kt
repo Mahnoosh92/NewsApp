@@ -1,10 +1,10 @@
 package com.mahdavi.newsapp.ui
 
-
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.postDelayed
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -15,12 +15,12 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
-
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
@@ -34,15 +34,13 @@ class MainActivity : AppCompatActivity() {
         //bottom navbar
         val navView: BottomNavigationView = binding.navView
         val navHostFragment =
-            supportFragmentManager.findFragmentById(com.mahdavi.newsapp.R.id.nav_host_fragment_activity_main) as NavHostFragment
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment
         navController = navHostFragment.navController
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                com.mahdavi.newsapp.R.id.home,
-                com.mahdavi.newsapp.R.id.favorite,
-                com.mahdavi.newsapp.R.id.setting
+                R.id.homeFragment, R.id.favoriteFragment, R.id.settingFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -55,12 +53,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNav() {
-
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.home -> showBottomNav()
-                R.id.favorite -> showBottomNav()
-                R.id.setting -> showBottomNav()
+                R.id.homeFragment -> showBottomNav()
+                R.id.favoriteFragment -> showBottomNav()
+                R.id.settingFragment -> showBottomNav()
                 else -> hideBottomNav()
             }
         }
@@ -80,17 +77,21 @@ class MainActivity : AppCompatActivity() {
     private fun hideBottomNav() {
         binding.navView.visibility = View.GONE
     }
+
     private fun showAppbar() {
-        binding.appbar.visibility= View.VISIBLE
+        binding.appbar.postDelayed(250) {
+            binding.appbar.visibility = View.VISIBLE
+        }
     }
 
     private fun hideAppbar() {
-        binding.appbar.visibility = View.GONE
+        lifecycleScope.launch {
+            delay(250)
+            binding.appbar.visibility = View.GONE
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
-
 }

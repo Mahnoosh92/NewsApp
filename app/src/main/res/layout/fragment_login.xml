@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/image_back_login"
         android:scaleType="centerCrop"
-        android:src="@drawable/login"
+        android:src="@drawable/img"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Guideline
@@ -58,7 +58,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/username_login"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
@@ -76,7 +76,7 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password_login"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/username_login"
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_16"
-                android:enabled="false"
+                android:enabled="true"
                 android:text="@string/title_loginFragment"
                 app:icon="@drawable/ic_baseline_navigate_next_24"
                 app:layout_constraintEnd_toEndOf="parent"
