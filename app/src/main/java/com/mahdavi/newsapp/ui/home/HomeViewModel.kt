@@ -1,20 +1,17 @@
 package com.mahdavi.newsapp.ui.home
 
 import android.os.Parcelable
-import android.util.Log
 import androidx.lifecycle.*
-import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Error
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Value
 import com.mahdavi.newsapp.data.model.remote.ArticleResponse
-import com.mahdavi.newsapp.data.repository.NewsRepository
+import com.mahdavi.newsapp.data.repository.news.NewsRepository
 import com.mahdavi.newsapp.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import javax.inject.Inject

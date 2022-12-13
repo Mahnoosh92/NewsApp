@@ -79,7 +79,7 @@
                     style="@style/EditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:maxLength="4"
+                    android:maxLength="6"
                     android:hint="@string/hint_password_registerFragment" />
             </com.google.android.material.textfield.TextInputLayout>
 

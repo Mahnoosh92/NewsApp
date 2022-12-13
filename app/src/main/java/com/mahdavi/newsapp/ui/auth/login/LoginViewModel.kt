@@ -24,37 +24,7 @@ class LoginViewModel @Inject constructor(
 
     fun login(username: String, password: String) {
         viewModelScope.launch {
-            authRepository.getUser()
-                .map { user ->
-                    user?.let {
-                        if (it.username == username && it.password == password) {
-                            _loginState.update { loginUiState: LoginUiState ->
-                                loginUiState.copy(isLoggedIn = true)
-                            }
-                        } else {
-                            _loginState.update { loginUiState: LoginUiState ->
-                                loginUiState.copy(
-                                    isLoggedIn = false,
-                                    error = R.string.login_invalid_error
-                                )
-                            }
-                        }
-                    } ?: kotlin.run {
-                            authRepository.loginUser(
-                                usernameValue = username,
-                                passwordValue = password
-                            ).collect {
-                                _loginState.update { loginUiState: LoginUiState ->
-                                    loginUiState.copy(
-                                        isLoggedIn = true
-                                    )
-                                }
-                            }
 
-                        }
-                }
-                .catch {  }
-                .collect()
         }
     }
 

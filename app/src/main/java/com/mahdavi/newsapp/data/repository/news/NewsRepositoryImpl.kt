@@ -1,7 +1,7 @@
-package com.mahdavi.newsapp.data.repository
+package com.mahdavi.newsapp.data.repository.news
 
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
-import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.news.NewsDataSource
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.local.entity.Article
 import com.mahdavi.newsapp.data.model.remote.ArticleResponse
@@ -9,12 +9,11 @@ import com.mahdavi.newsapp.di.IoDispatcher
 import com.mahdavi.newsapp.utils.extensions.getApiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
-import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
 
 class NewsRepositoryImpl @Inject constructor(
-    private val remoteDataSource: RemoteDataSource,
+    private val remoteDataSource: NewsDataSource,
     private val localDataSource: LocalDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : NewsRepository {

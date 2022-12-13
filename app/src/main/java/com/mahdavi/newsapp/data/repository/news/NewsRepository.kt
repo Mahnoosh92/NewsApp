@@ -1,4 +1,4 @@
-package com.mahdavi.newsapp.data.repository
+package com.mahdavi.newsapp.data.repository.news
 
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.remote.ArticleResponse

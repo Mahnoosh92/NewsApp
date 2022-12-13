@@ -47,7 +47,7 @@ class PasswordValidator(private val password: String) : IValidator {
                 "(?=.*[@#$%^&+!=])" + // at least 1 special character
                 "(?=\\S+$)" + // no white spaces
                 "(?=\\S+$)" + //no white spaces
-                ".{4,}" + // at least 4 characters
+                ".{6,}" + // at least 4 characters
                 "$"
     )
 

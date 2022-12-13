@@ -1,9 +1,9 @@
-package com.mahdavi.newsapp.data.dataSource.local.auth
+package com.mahdavi.newsapp.data.dataSource.local.datastore
 
 import com.mahdavi.newsapp.data.model.local.auth.User
 import kotlinx.coroutines.flow.Flow
 
-interface AuthLocalDataSource {
+interface AuthDataSource {
     suspend fun loginUser(
         usernameValue: String,
         passwordValue: String

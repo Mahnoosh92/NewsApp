@@ -1,17 +1,15 @@
 package com.mahdavi.newsapp.data.repository.auth
 
-import com.mahdavi.newsapp.data.dataSource.local.auth.AuthLocalDataSource
-import com.mahdavi.newsapp.data.model.local.auth.User
-import kotlinx.coroutines.flow.Flow
+import com.mahdavi.newsapp.data.dataSource.local.datastore.AuthDataSource
 import javax.inject.Inject
 
-class AuthRepositoryImpl @Inject constructor(private val authLocalDataSource: AuthLocalDataSource) :
+class AuthRepositoryImpl @Inject constructor(private val authDataSource: AuthDataSource) :
     AuthRepository {
     override suspend fun loginUser(
         usernameValue: String,
         passwordValue: String
-    ) = authLocalDataSource.loginUser(usernameValue, passwordValue)
+    ) = authDataSource.loginUser(usernameValue, passwordValue)
 
     override fun getUser() =
-        authLocalDataSource.getUser()
+        authDataSource.getUser()
 }

@@ -78,6 +78,9 @@ class RegisterFragment : BaseFragment() {
                     password.getQueryTextStateFlow()
                 )
             }
+            registerButton.setOnClickListener{
+                viewModel.registerUser(username.text.toString(), password.text.toString())
+            }
         }
     }
 

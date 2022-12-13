@@ -7,25 +7,27 @@ import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
-import com.mahdavi.newsapp.data.dataSource.local.auth.AuthLocalDataSource
-import com.mahdavi.newsapp.data.dataSource.local.auth.AuthLocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.datastore.AuthDataSource
+import com.mahdavi.newsapp.data.dataSource.local.datastore.AuthDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceHelperImpl
-import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSource
-import com.mahdavi.newsapp.data.dataSource.remote.RemoteDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.news.NewsDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.news.NewsDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
-import com.mahdavi.newsapp.data.repository.NewsRepository
-import com.mahdavi.newsapp.data.repository.NewsRepositoryImpl
+import com.mahdavi.newsapp.data.repository.news.NewsRepository
+import com.mahdavi.newsapp.data.repository.news.NewsRepositoryImpl
 import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.data.repository.auth.AuthRepositoryImpl
-import com.mahdavi.newsapp.utils.extensions.myDataStore
+import com.mahdavi.newsapp.data.repository.user.UserRepository
+import com.mahdavi.newsapp.data.repository.user.UserRepositoryImpl
 import com.mahdavi.newsapp.utils.validate.Validate
 import com.mahdavi.newsapp.utils.validate.ValidateImpl
 import dagger.Binds
@@ -130,13 +132,19 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindRemoteDataSource(
-        remoteDataSourceImpl: RemoteDataSourceImpl
-    ): RemoteDataSource
+        remoteDataSourceImpl: NewsDataSourceImpl
+    ): NewsDataSource
 
     @Binds
     abstract fun bindAuthDataSource(
-        authLocalDataSourceImpl : AuthLocalDataSourceImpl
-    ): AuthLocalDataSource
+        authLocalDataSourceImpl : AuthDataSourceImpl
+    ): AuthDataSource
+
+    @Singleton
+    @Binds
+    abstract fun bindUserDataSource(
+        userDataSourceImpl : UserDataSourceImpl
+    ): UserDataSource
 }
 
 @Module
@@ -152,6 +160,11 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    abstract fun bindUserRepository(
+        userRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 }
 
 @Module
