@@ -10,7 +10,7 @@
     <string name="text_validation_success">Validation is successful</string>
     <string name="text_validation_error_empty_field">Cannot be empty</string>
     <string name="text_validation_error_email">Email is not valid</string>
-    <string name="text_validation_error_password">Password must contain at least 1 special character and 4 characters</string>
+    <string name="text_validation_error_password">Password must contain at least 1 special character and 6 characters</string>
     <string name="text_validation_error_phone">Phone is not valid</string>
     <string name="login_invalid_error">Error on authentication values</string>
 
@@ -37,5 +37,7 @@
     <string name="title_registerFragment">Register</string>
     <string name="hint_username_registerFragment">Username</string>
     <string name="hint_password_registerFragment">Password</string>
-
+    <!-- registerFragment -->
+    <string name="successful_registration">Successful registration</string>
+    <string name="unsuccessful_registration">Please try again</string>
 </resources>

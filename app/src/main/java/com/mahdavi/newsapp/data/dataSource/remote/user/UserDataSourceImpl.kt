@@ -10,7 +10,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class UserDataSourceImpl @Inject constructor()  : UserDataSource {
+class UserDataSourceImpl @Inject constructor() : UserDataSource {
     private var auth: FirebaseAuth = Firebase.auth
 
     override fun getCurrentUser(): FirebaseUser? {
@@ -32,4 +32,17 @@ class UserDataSourceImpl @Inject constructor()  : UserDataSource {
                 }
             }
     }
+
+    override suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult =
+        suspendCoroutine { continuation ->
+            auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    continuation.resume(task.result)
+                } else {
+                    continuation.resumeWithException(
+                        task.exception ?: Exception("Something went wrong!")
+                    )
+                }
+            }
+        }
 }

@@ -10,14 +10,17 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.textfield.TextInputLayout
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentLoginBinding
 import com.mahdavi.newsapp.databinding.FragmentRegisterBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.ui.auth.login.LoginViewModel
+import com.mahdavi.newsapp.utils.extensions.action
 import com.mahdavi.newsapp.utils.extensions.getQueryTextStateFlow
 import com.mahdavi.newsapp.utils.extensions.setStrockColor
+import com.mahdavi.newsapp.utils.extensions.shortSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -49,6 +52,7 @@ class RegisterFragment : BaseFragment() {
             .onEach { registrationUiState ->
                 binding.apply {
                     registerButton.isEnabled = registrationUiState.areInputsValid
+                    viewModel.consumeAreInputsValid()
                     registrationUiState.emailInvalidationResult?.let {
                         if (it.isSuccess) {
                             usernameRegister.error = null
@@ -56,6 +60,7 @@ class RegisterFragment : BaseFragment() {
                         } else {
                             usernameRegister.error = getString(it.errorMessage)
                         }
+                        viewModel.consumeEmailInvalidationResult()
                     }
                     registrationUiState.passwordInvalidationResult?.let {
                         if (it.isSuccess) {
@@ -64,6 +69,18 @@ class RegisterFragment : BaseFragment() {
                         } else {
                             passwordRegister.error = getString(it.errorMessage)
                         }
+                        viewModel.consumePasswordInvalidationResult()
+                    }
+                    registrationUiState.registerResult?.let { registerResult ->
+                        if (registerResult.isRegistered == true) {
+                            binding.root.shortSnackBar(getString(R.string.successful_registration))
+                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
+                        } else {
+                            binding.root.shortSnackBar(
+                                registerResult.errorMessage ?: getString(R.string.error_general)
+                            )
+                        }
+                        viewModel.consumeRegisterResult()
                     }
                 }
             }
@@ -78,7 +95,7 @@ class RegisterFragment : BaseFragment() {
                     password.getQueryTextStateFlow()
                 )
             }
-            registerButton.setOnClickListener{
+            registerButton.setOnClickListener {
                 viewModel.registerUser(username.text.toString(), password.text.toString())
             }
         }

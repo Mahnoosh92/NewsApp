@@ -61,17 +61,17 @@
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:layout_constraintTop_toBottomOf="@id/login_text"
                 app:startIconDrawable="@drawable/ic_baseline_login_24"
                 app:startIconTint="@color/black_600">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/username"
-
-                    android:hint="@string/hint_username_loginFragment"
+                    style="@style/EditText"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:hint="@string/hint_username_loginFragment"
+                    android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -79,18 +79,22 @@
                 style="@style/TextInputLayoutStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/username_login"
-                app:startIconDrawable="@drawable/ic_baseline_password_24"
-                app:passwordToggleEnabled="true"
                 android:layout_marginTop="@dimen/margin_8"
+                app:counterEnabled="true"
+                app:counterMaxLength="6"
+                app:layout_constraintTop_toBottomOf="@id/username_login"
+                app:passwordToggleEnabled="true"
+                app:startIconDrawable="@drawable/ic_baseline_password_24"
                 app:startIconTint="@color/black_600">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/password"
+                    style="@style/EditText"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/hint_password_loginFragment"
-                    />
+                    android:maxLength="6"
+                    android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton

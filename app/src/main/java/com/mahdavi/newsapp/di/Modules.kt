@@ -24,8 +24,6 @@ import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
 import com.mahdavi.newsapp.data.repository.news.NewsRepositoryImpl
-import com.mahdavi.newsapp.data.repository.auth.AuthRepository
-import com.mahdavi.newsapp.data.repository.auth.AuthRepositoryImpl
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepositoryImpl
 import com.mahdavi.newsapp.utils.validate.Validate
@@ -156,10 +154,6 @@ abstract class RepositoryModule {
         newsRepositoryImpl: NewsRepositoryImpl
     ): NewsRepository
 
-    @Binds
-    abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
-    ): AuthRepository
 
     @Binds
     abstract fun bindUserRepository(

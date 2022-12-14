@@ -1,49 +1,101 @@
 package com.mahdavi.newsapp.ui.auth.login
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.*
-import com.mahdavi.newsapp.R
-import com.mahdavi.newsapp.data.repository.auth.AuthRepository
+import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.di.IoDispatcher
+import com.mahdavi.newsapp.ui.auth.register.RegisterResult
 import com.mahdavi.newsapp.utils.validate.Validate
+import com.mahdavi.newsapp.utils.validate.ValidateResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    private val userRepository: UserRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val validator: Validate
 ) : ViewModel() {
 
-    private var _loginState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
-    val loginState = _loginState.asStateFlow()
+    private var _loginUiState: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
+    val loginUiState = _loginUiState.asStateFlow()
 
-    fun login(username: String, password: String) {
-        viewModelScope.launch {
-
+    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
+        _loginUiState.update { loginUiState ->
+            loginUiState.copy(
+                loginResult = LoginResult(
+                    false,
+                    exception.message ?: "Something went wrong!"
+                )
+            )
         }
     }
 
-    fun validateLoginInputs(usernameFlow: Flow<String>, passwordFlow: Flow<String>) {
+    fun login(email: String, password: String) {
+        viewModelScope.launch(exceptionHandler) {
+            withContext(ioDispatcher) {
+                userRepository.signInWithEmailAndPassword(email, password)
+                _loginUiState.update { loginUiState ->
+                    loginUiState.copy(loginResult = LoginResult(true, null))
+                }
+            }
+        }
+    }
+
+    fun validateInputs(usernameFlow: Flow<String>, passwordFlow: Flow<String>) {
         usernameFlow
             .combine(passwordFlow) { username, password ->
                 username to password
             }
             .onEach {
-                _loginState.update { loginUiState ->
-                    loginUiState.copy(areInputsValid = it.first.isNotEmpty() && it.second.isNotEmpty())
+                _loginUiState.update { loginUiState ->
+                    val usernameValidationResult = validator.validateEmail(it.first)
+                    val passwordValidationResult = validator.validatePassword(it.second)
+                    loginUiState.copy(
+                        areInputsValid = it.first.isNotEmpty() && it.second.isNotEmpty() && usernameValidationResult.isSuccess && passwordValidationResult.isSuccess,
+                        emailInvalidationResult = if (it.first.isNotEmpty()) usernameValidationResult else null,
+                        passwordInvalidationResult = if (it.second.isNotEmpty()) passwordValidationResult else null
+                    )
                 }
             }
             .launchIn(viewModelScope)
     }
 
+    fun consumeEmailInvalidationResult() {
+        _loginUiState.update { loginUiState ->
+            loginUiState.copy(emailInvalidationResult = null)
+        }
+    }
+
+    fun consumePasswordInvalidationResult() {
+        _loginUiState.update { loginUiState ->
+            loginUiState.copy(passwordInvalidationResult = null)
+        }
+    }
+
+    fun consumeLoginResult() {
+        _loginUiState.update { loginUiState ->
+            loginUiState.copy(loginResult = null)
+        }
+    }
+
+    fun consumeAreInputsValid() {
+        _loginUiState.update { loginUiState ->
+            loginUiState.copy(areInputsValid = null)
+        }
+    }
+
     data class LoginUiState(
-        val isLoggedIn: Boolean? = null,
-        @StringRes val error: Int = -1,
-        val areInputsValid: Boolean = false
+        val loginResult: LoginResult? = null,
+        val areInputsValid: Boolean? = null,
+        val emailInvalidationResult: ValidateResult? = null,
+        val passwordInvalidationResult: ValidateResult? = null,
     )
+
+    data class LoginResult(val isLoggedIn: Boolean? = null, val errorMessage: String? = null)
 }

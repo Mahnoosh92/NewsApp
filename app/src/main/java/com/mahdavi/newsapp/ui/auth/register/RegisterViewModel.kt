@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.di.DefaultDispatcher
+import com.mahdavi.newsapp.di.IoDispatcher
 import com.mahdavi.newsapp.utils.validate.Validate
 import com.mahdavi.newsapp.utils.validate.ValidateResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -19,14 +21,23 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val validator: Validate,
-    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher
+    @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
 
     private var _registrationUiState = MutableStateFlow(RegistrationUiState())
     val registrationUiState = _registrationUiState.asStateFlow()
 
+
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-        Log.i("reza", ": $exception ")
+        _registrationUiState.update { registerUiState ->
+            registerUiState.copy(
+                registerResult = RegisterResult(
+                    false,
+                    exception.message ?: "Something went wrong!"
+                )
+            )
+        }
     }
 
     fun validateRegisterInputs(usernameFlow: Flow<String>, passwordFlow: Flow<String>) {
@@ -55,8 +66,44 @@ class RegisterViewModel @Inject constructor(
 
     fun registerUser(email: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
-            val user = userRepository.createUserWithEmailAndPassword(email, password).user
-            Log.i("Reza", "registerUser: ${user?.email}")
+            withContext(ioDispatcher) {
+                val user = userRepository.createUserWithEmailAndPassword(email, password).user
+                _registrationUiState.update { registerUiState ->
+                    registerUiState.copy(registerResult = RegisterResult(true, null))
+                }
+            }
+        }
+    }
+
+    fun consumeEmailInvalidationResult() {
+        _registrationUiState.update { registerUiState ->
+            registerUiState.copy(
+                emailInvalidationResult = null
+            )
+        }
+    }
+
+    fun consumePasswordInvalidationResult() {
+        _registrationUiState.update { registerUiState ->
+            registerUiState.copy(
+                passwordInvalidationResult = null
+            )
+        }
+    }
+
+    fun consumeAreInputsValid() {
+        _registrationUiState.update { registerUiState ->
+            registerUiState.copy(
+                areInputsValid = false
+            )
+        }
+    }
+
+    fun consumeRegisterResult() {
+        _registrationUiState.update { registerUiState ->
+            registerUiState.copy(
+                registerResult = null
+            )
         }
     }
 }
@@ -65,5 +112,8 @@ data class RegistrationUiState(
     val isLoading: Boolean = false,
     val emailInvalidationResult: ValidateResult? = null,
     val passwordInvalidationResult: ValidateResult? = null,
-    val areInputsValid: Boolean = false
+    val areInputsValid: Boolean = false,
+    val registerResult: RegisterResult? = null
 )
+
+data class RegisterResult(val isRegistered: Boolean? = null, val errorMessage: String? = null)
