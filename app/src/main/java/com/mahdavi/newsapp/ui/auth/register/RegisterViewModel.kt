@@ -66,11 +66,9 @@ class RegisterViewModel @Inject constructor(
 
     fun registerUser(email: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
-            withContext(ioDispatcher) {
-                val user = userRepository.createUserWithEmailAndPassword(email, password).user
-                _registrationUiState.update { registerUiState ->
-                    registerUiState.copy(registerResult = RegisterResult(true, null))
-                }
+            val user = userRepository.createUserWithEmailAndPassword(email, password).user
+            _registrationUiState.update { registerUiState ->
+                registerUiState.copy(registerResult = RegisterResult(true, null))
             }
         }
     }

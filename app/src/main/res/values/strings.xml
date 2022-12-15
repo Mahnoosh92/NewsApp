@@ -32,7 +32,7 @@
     <string name="hint_password_loginFragment">Password</string>
     <string name="other_login_loginFragment">or login with</string>
     <string name="facebook_loginFragment">Facebook</string>
-    <string name="twitter_loginFragment">Twitter</string>
+    <string name="google_loginFragment">Gmail</string>
     <!-- loginFragment -->
     <string name="title_registerFragment">Register</string>
     <string name="hint_username_registerFragment">Username</string>

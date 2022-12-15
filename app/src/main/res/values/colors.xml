@@ -38,4 +38,9 @@
 
     <color name="green_100">#008000</color>
 
+    <color name="blue_500">	#4267B2</color>
+
+
+    <color name="red_500">#DB4437</color>
+
 </resources>

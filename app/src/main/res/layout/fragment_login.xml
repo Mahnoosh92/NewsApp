@@ -25,7 +25,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_16"
-        android:background="@null"
         app:cardElevation="@dimen/elevation_10"
         app:layout_constraintTop_toTopOf="@id/guideline">
 
@@ -105,6 +104,7 @@
                 android:enabled="true"
                 android:text="@string/title_loginFragment"
                 app:icon="@drawable/ic_baseline_navigate_next_24"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/password_login" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -121,6 +121,20 @@
         app:layout_constraintBottom_toTopOf="@+id/facebook_login" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/google_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_16"
+        android:text="@string/google_loginFragment"
+        app:cornerRadius="@dimen/radius_50"
+        style="@style/Button_login"
+        app:icon="@drawable/ic_google"
+        android:backgroundTint="@color/red_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/facebook_login"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/facebook_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -128,17 +142,9 @@
         android:text="@string/facebook_loginFragment"
         app:cornerRadius="@dimen/radius_50"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/twitter_login"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/twitter_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_16"
-        android:text="@string/twitter_loginFragment"
-        app:cornerRadius="@dimen/radius_50"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/facebook_login" />
+        app:icon="@drawable/ic_facebook"
+        style="@style/Button_login"
+        android:backgroundTint="@color/blue_500"
+        app:layout_constraintStart_toEndOf="@+id/google_login" />
 </androidx.constraintlayout.widget.ConstraintLayout>

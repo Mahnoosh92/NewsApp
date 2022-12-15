@@ -40,4 +40,6 @@
 
     <!-- login -->
     <dimen name="image_back_login">300dp</dimen>
+    <!-- setting -->
+    <dimen name="image_up_setting_height">300dp</dimen>
 </resources>

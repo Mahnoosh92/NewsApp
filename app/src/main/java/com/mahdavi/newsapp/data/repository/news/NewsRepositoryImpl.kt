@@ -21,7 +21,6 @@ class NewsRepositoryImpl @Inject constructor(
     override suspend fun getNews(topic: String): Flow<ResultWrapper<Exception, List<ArticleResponse?>>?> =
         flow {
             remoteDataSource.getNews(topic)
-                .flowOn(ioDispatcher)
                 .map { response ->
                     try {
                         if (!response.isSuccessful) {
@@ -36,7 +35,6 @@ class NewsRepositoryImpl @Inject constructor(
                 }
                 .map { articleResponseList ->
                     clearDataBase()
-                        .flowOn(ioDispatcher)
                         .onCompletion {
                             articleResponseList?.let {
                                 updateDataBase(it.filterNotNull()
@@ -48,12 +46,12 @@ class NewsRepositoryImpl @Inject constructor(
                                     .collect()
                             }
                         }
+                        .flowOn(ioDispatcher)
                         .catch { error -> Timber.e(error) }
                         .collect()
                 }
                 .map {
                     localDataSource.getArticles()
-                        .flowOn(ioDispatcher)
                         .onEach {
                             emit(ResultWrapper.build {
                                 it.map { article ->
@@ -61,12 +59,11 @@ class NewsRepositoryImpl @Inject constructor(
                                 }
                             })
                         }
-                        .catch { error ->
-                            emit(ResultWrapper.build {
-                                throw error
-                            })
-                        }.collect()
+                        .flowOn(ioDispatcher)
+                        .catch {error -> Timber.e(error)}
+                        .collect()
                 }
+                .flowOn(ioDispatcher)
                 .catch { error ->
                     emit(ResultWrapper.build {
                         throw error

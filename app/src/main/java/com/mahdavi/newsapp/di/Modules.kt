@@ -13,8 +13,6 @@ import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
-import com.mahdavi.newsapp.data.dataSource.local.datastore.AuthDataSource
-import com.mahdavi.newsapp.data.dataSource.local.datastore.AuthDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceHelperImpl
 import com.mahdavi.newsapp.data.dataSource.remote.news.NewsDataSource
@@ -119,6 +117,33 @@ object PersistenceModule {
     }
 }
 
+@InstallIn(SingletonComponent::class)
+@Module
+object CoroutinesDispatchersModule {
+
+    @DefaultDispatcher
+    @Provides
+    @Singleton
+    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
+
+    @IoDispatcher
+    @Provides
+    @Singleton
+    fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
+
+    @MainDispatcher
+    @Provides
+    @Singleton
+    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
+
+    @MainImmediateDispatcher
+    @Provides
+    @Singleton
+    fun providesMainImmediateDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
+}
+
+//////////////////////////////////////////////
+//bindings
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class DataSourceModule {
@@ -132,11 +157,6 @@ abstract class DataSourceModule {
     abstract fun bindRemoteDataSource(
         remoteDataSourceImpl: NewsDataSourceImpl
     ): NewsDataSource
-
-    @Binds
-    abstract fun bindAuthDataSource(
-        authLocalDataSourceImpl : AuthDataSourceImpl
-    ): AuthDataSource
 
     @Singleton
     @Binds
@@ -181,32 +201,8 @@ abstract class UtilsModule {
         validateImpl: ValidateImpl
     ): Validate
 }
-
-@InstallIn(SingletonComponent::class)
-@Module
-object CoroutinesDispatchersModule {
-
-    @DefaultDispatcher
-    @Provides
-    @Singleton
-    fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
-
-    @IoDispatcher
-    @Provides
-    @Singleton
-    fun providesIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @MainDispatcher
-    @Provides
-    @Singleton
-    fun providesMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
-
-    @MainImmediateDispatcher
-    @Provides
-    @Singleton
-    fun providesMainImmediateDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
-}
-
+/////////////////////////////////////////////
+//Qualifiers
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
 annotation class DefaultDispatcher

@@ -24,6 +24,13 @@
         <item name="android:paddingBottom">@dimen/padding_20</item>
     </style>
 
+    <style name="Button_login">
+        <item name="android:textSize">@dimen/font_size_16</item>
+        <item name="fontFamily">@font/lato_black</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="iconSize">18dp</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />

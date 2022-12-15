@@ -45,14 +45,12 @@ class RegisterFragment : BaseFragment() {
 
     }
 
-    //TODO: make background green when successful
     override fun setupCollectors() {
         viewModel.registrationUiState
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { registrationUiState ->
                 binding.apply {
                     registerButton.isEnabled = registrationUiState.areInputsValid
-                    viewModel.consumeAreInputsValid()
                     registrationUiState.emailInvalidationResult?.let {
                         if (it.isSuccess) {
                             usernameRegister.error = null
@@ -74,7 +72,7 @@ class RegisterFragment : BaseFragment() {
                     registrationUiState.registerResult?.let { registerResult ->
                         if (registerResult.isRegistered == true) {
                             binding.root.shortSnackBar(getString(R.string.successful_registration))
-                            findNavController().navigate(RegisterFragmentDirections.actionRegisterFragmentToLoginFragment())
+                            findNavController().navigateUp()
                         } else {
                             binding.root.shortSnackBar(
                                 registerResult.errorMessage ?: getString(R.string.error_general)

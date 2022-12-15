@@ -38,11 +38,9 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
-            withContext(ioDispatcher) {
-                userRepository.signInWithEmailAndPassword(email, password)
-                _loginUiState.update { loginUiState ->
-                    loginUiState.copy(loginResult = LoginResult(true, null))
-                }
+            userRepository.signInWithEmailAndPassword(email, password)
+            _loginUiState.update { loginUiState ->
+                loginUiState.copy(loginResult = LoginResult(true, null))
             }
         }
     }

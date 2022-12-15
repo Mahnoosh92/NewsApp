@@ -30,7 +30,8 @@ class SettingFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-
+        val data = listOf("A","B", "C","D","E", "F", "G","A","B", "C","D","E", "F", "G","A","B", "C","D","E", "F", "G","A","B", "C","D","E", "F", "G","A","B", "C","D","E", "F", "G")
+        binding.recycleView.adapter = SettingDataAdapter(data)
     }
 
     override fun setupCollectors() {
@@ -38,6 +39,7 @@ class SettingFragment : BaseFragment() {
     }
 
     override fun setupListeners() {
+
     }
 
 
