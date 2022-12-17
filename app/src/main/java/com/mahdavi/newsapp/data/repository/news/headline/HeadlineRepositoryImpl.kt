@@ -1,7 +1,7 @@
-package com.mahdavi.newsapp.data.repository.news
+package com.mahdavi.newsapp.data.repository.news.headline
 
-import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
-import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSource
+import com.mahdavi.newsapp.data.dataSource.local.headline.HeadlineLocalDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.news.headline.HeadlineDataSource
 import com.mahdavi.newsapp.data.model.HeadlineArticle
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.local.entity.NewsHeadlineArticleEntity
@@ -13,14 +13,14 @@ import kotlinx.coroutines.flow.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class NewsRepositoryImpl @Inject constructor(
-    private val newsRemoteDataSource: NewsRemoteDataSource,
-    private val newsLocalDataSource: NewsLocalDataSource,
+class HeadlineRepositoryImpl @Inject constructor(
+    private val remoteDataSource: HeadlineDataSource,
+    private val localDataSource: HeadlineLocalDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : NewsRepository {
-    override suspend fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>>?> =
+) : HeadlineRepository {
+    override suspend fun getLatestNews(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>>?> =
         flow {
-            newsRemoteDataSource.getLatestHeadlines(topic)
+            remoteDataSource.getLatestHeadlines(topic)
                 .map { response ->
                     try {
                         if (!response.isSuccessful) {
@@ -34,40 +34,35 @@ class NewsRepositoryImpl @Inject constructor(
                     response.body()?.articles
                 }
                 .map { articleResponseList ->
-                    clearLocalHeadlines()
+                    clearDataBase()
                         .onCompletion {
                             articleResponseList?.let {
-                                updateLocalHeadlines(it.filterNotNull()
-                                    .map { articleResponse ->
-                                        articleResponse.toNewsHeadlineArticleEntity()
-                                    })
+                                updateDataBase(
+                                    it.filterNotNull()
+                                        .map(NewsHeadlineArticle::toNewsHeadlineArticleEntity)
+                                )
                                     .flowOn(ioDispatcher)
-                                    .catch { error ->
-                                        Timber.e(error)
-                                    }
+                                    .catch { error -> Timber.e(error) }
                                     .collect()
                             }
                         }
                         .flowOn(ioDispatcher)
-                        .catch { error ->
-                            Timber.e(error)
-                        }
+                        .catch { error -> Timber.e(error) }
                         .collect()
                 }
                 .map {
-                    getLocalHeadLines()
-                        .onEach {
+                    localDataSource.getHeadlineArticles()
+                        .flowOn(ioDispatcher)
+                        .catch { error ->
+                            Timber.e(error)
+                        }
+                        .collect {
                             emit(ResultWrapper.build {
                                 it.map { article ->
                                     article.toHeadlineArticle()
                                 }
                             })
                         }
-                        .flowOn(ioDispatcher)
-                        .catch { error ->
-                            Timber.e(error)
-                        }
-                        .collect()
                 }
                 .flowOn(ioDispatcher)
                 .catch { error ->
@@ -78,8 +73,7 @@ class NewsRepositoryImpl @Inject constructor(
                 .collect()
         }
 
-    private fun clearLocalHeadlines() = newsLocalDataSource.clearHeadlines()
-    private fun updateLocalHeadlines(list: List<NewsHeadlineArticleEntity>) =
-        newsLocalDataSource.updateHeadlines(list)
-    private fun getLocalHeadLines() = newsLocalDataSource.getHeadlines()
+    private fun clearDataBase() = localDataSource.clear()
+    private fun updateDataBase(list: List<NewsHeadlineArticleEntity>) = localDataSource.update(list)
 }
+

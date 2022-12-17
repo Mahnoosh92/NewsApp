@@ -1,16 +1,14 @@
-package com.mahdavi.newsapp.data.model.remote
+package com.mahdavi.newsapp.data.model.remote.searchedNews
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.mahdavi.newsapp.data.model.local.entity.Article
-import kotlinx.parcelize.Parcelize
+import com.mahdavi.newsapp.data.model.SearchedArticle
+import com.mahdavi.newsapp.data.model.local.entity.SearchedNewsArticleEntity
 
-@Parcelize
-data class ArticleResponse(
+data class SearchedNewsArticle(
     @SerializedName("_id") val id: String?,
-    @SerializedName("_score") val score: String?,
+    @SerializedName("_score") val score: Int?,
     @SerializedName("author") val author: String?,
-    @SerializedName("authors") val authors: String?,
+//    @SerializedName("authors") val authors: List<String>?,
     @SerializedName("clean_url") val cleanUrl: String?,
     @SerializedName("country") val country: String?,
     @SerializedName("excerpt") val excerpt: String?,
@@ -26,12 +24,34 @@ data class ArticleResponse(
     @SerializedName("title") val title: String?,
     @SerializedName("topic") val topic: String?,
     @SerializedName("twitter_account") val twitterAccount: String?
-): Parcelable {
-    fun toArticle() = Article(
+) {
+    fun toSearchedNewsArticleEntity() = SearchedNewsArticleEntity(
         id = id,
         score = score,
         author = author,
-        authors = authors,
+//       authors = authors,
+        cleanUrl = cleanUrl,
+        country = country,
+        excerpt = excerpt,
+        isOpinion = isOpinion,
+        language = language,
+        link = link,
+        media = media,
+        publishedDate = publishedDate,
+        publishedDatePrecision = publishedDatePrecision,
+        rank = rank,
+        rights = rights,
+        summary = summary,
+        title = title,
+        topic = topic,
+        twitterAccount = twitterAccount
+    )
+
+    fun toSearchedArticle() = SearchedArticle(
+        id = id,
+        score = score,
+        author = author,
+//        authors = authors,
         cleanUrl = cleanUrl,
         country = country,
         excerpt = excerpt,

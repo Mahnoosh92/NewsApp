@@ -1,11 +1,12 @@
-package com.mahdavi.newsapp.ui.home
+package com.mahdavi.newsapp.ui.headlines
 
 import android.os.Parcelable
 import androidx.lifecycle.*
+import com.mahdavi.newsapp.data.model.HeadlineArticle
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Error
 import com.mahdavi.newsapp.data.model.local.ResultWrapper.Value
-import com.mahdavi.newsapp.data.model.remote.ArticleResponse
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
+import com.mahdavi.newsapp.data.repository.news.headline.HeadlineRepository
 import com.mahdavi.newsapp.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
@@ -17,9 +18,8 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
-    private val newsRepository: NewsRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+class HeadlineViewModel @Inject constructor(
+    private val newsRepository: NewsRepository
 ) : ViewModel() {
 
     private val _articles = MutableStateFlow(HomeUiState())
@@ -34,13 +34,13 @@ class HomeViewModel @Inject constructor(
     fun getQuery(input: StateFlow<String>) {
         viewModelScope.launch(exceptionHandler) {
             input
-                .debounce(500L)
+                .debounce(2000L)
                 .distinctUntilChanged()
                 .filter {
                     it.isNotEmpty()
                 }
                 .flatMapLatest { topic ->
-                    newsRepository.getNews(topic)
+                    newsRepository.getLatestHeadlines(topic)
                 }
                 .catch { error ->
                     Timber.e(error)
@@ -76,6 +76,7 @@ class HomeViewModel @Inject constructor(
                 }
         }
     }
+
     fun consume() {
         _articles.update { homeUiState ->
             homeUiState.copy(error = null)
@@ -85,7 +86,7 @@ class HomeViewModel @Inject constructor(
 
 @Parcelize
 data class ItemArticleUiState(
-    val article: ArticleResponse, val onClick: (ArticleResponse) -> Unit
+    val article: HeadlineArticle, val onClick: (HeadlineArticle) -> Unit
 ) : Parcelable
 
 data class HomeUiState(

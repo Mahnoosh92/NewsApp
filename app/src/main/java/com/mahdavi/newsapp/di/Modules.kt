@@ -11,17 +11,29 @@ import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.data.api.ApiService
-import com.mahdavi.newsapp.data.dataSource.local.LocalDataSource
-import com.mahdavi.newsapp.data.dataSource.local.LocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.headline.HeadlineLocalDataSource
+import com.mahdavi.newsapp.data.dataSource.local.headline.HeadlineLocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
+import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceHelperImpl
-import com.mahdavi.newsapp.data.dataSource.remote.news.NewsDataSource
-import com.mahdavi.newsapp.data.dataSource.remote.news.NewsDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.news.headline.HeadlineDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.news.headline.HeadlineDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.search.SearchLocalDataSource
+import com.mahdavi.newsapp.data.dataSource.local.search.SearchLocalDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.news.search.SearchedArticleDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.news.search.SearchedArticleDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
 import com.mahdavi.newsapp.data.repository.news.NewsRepositoryImpl
+import com.mahdavi.newsapp.data.repository.news.headline.HeadlineRepository
+import com.mahdavi.newsapp.data.repository.news.headline.HeadlineRepositoryImpl
+import com.mahdavi.newsapp.data.repository.news.search.SearchRepository
+import com.mahdavi.newsapp.data.repository.news.search.SearchRepositoryImpl
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepositoryImpl
 import com.mahdavi.newsapp.utils.validate.Validate
@@ -94,12 +106,17 @@ object PersistenceModule {
     @Singleton
     fun provideAppDatabase(@ApplicationContext appContext: Context) = Room.databaseBuilder(
         appContext, AppDataBase::class.java, "item_database"
-    ).build()
+    )
+        .fallbackToDestructiveMigration()
+        .build()
 
     @Provides
     @Singleton
-    fun provideArticleDao(db: AppDataBase) = db.articleDao()
+    fun provideHeadlineArticleDao(db: AppDataBase) = db.headlineArticleDao()
 
+    @Provides
+    @Singleton
+    fun provideSearchedArticleDao(db: AppDataBase) = db.searchedArticleDao()
 //    @Provides
 //    @Singleton
 //    fun provideMyDataStorePreferences(
@@ -149,19 +166,19 @@ object CoroutinesDispatchersModule {
 abstract class DataSourceModule {
 
     @Binds
-    abstract fun bindLocalDataSource(
-        localDataSourceImpl: LocalDataSourceImpl
-    ): LocalDataSource
+    abstract fun bindNewsLocalDataSource(
+        newsLocalDataSourceImpl: NewsLocalDataSourceImpl
+    ): NewsLocalDataSource
 
     @Binds
-    abstract fun bindRemoteDataSource(
-        remoteDataSourceImpl: NewsDataSourceImpl
-    ): NewsDataSource
+    abstract fun bindNewsRemoteDataSource(
+        newsRemoteDataSourceImpl: NewsRemoteDataSourceImpl
+    ): NewsRemoteDataSource
 
     @Singleton
     @Binds
     abstract fun bindUserDataSource(
-        userDataSourceImpl : UserDataSourceImpl
+        userDataSourceImpl: UserDataSourceImpl
     ): UserDataSource
 }
 
@@ -173,7 +190,6 @@ abstract class RepositoryModule {
     abstract fun bindNewsRepository(
         newsRepositoryImpl: NewsRepositoryImpl
     ): NewsRepository
-
 
     @Binds
     abstract fun bindUserRepository(
@@ -201,6 +217,7 @@ abstract class UtilsModule {
         validateImpl: ValidateImpl
     ): Validate
 }
+
 /////////////////////////////////////////////
 //Qualifiers
 @Retention(AnnotationRetention.RUNTIME)

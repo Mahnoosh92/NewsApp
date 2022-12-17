@@ -1,19 +1,17 @@
-package com.mahdavi.newsapp.ui.home
+package com.mahdavi.newsapp.ui.headlines
 
 
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import com.mahdavi.newsapp.R
-import com.mahdavi.newsapp.data.model.remote.ArticleResponse
-import com.mahdavi.newsapp.databinding.FragmentHomeBinding
+import com.mahdavi.newsapp.data.model.HeadlineArticle
+import com.mahdavi.newsapp.databinding.FragmentHeadlineBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.utils.extensions.action
 import com.mahdavi.newsapp.utils.extensions.getQueryTextChangeStateFlow
@@ -21,23 +19,21 @@ import com.mahdavi.newsapp.utils.extensions.shortSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.util.Objects
-
 
 @AndroidEntryPoint
-class HomeFragment : BaseFragment(), MenuProvider {
+class HeadlineFragment : BaseFragment(), MenuProvider {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentHeadlineBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HeadlineViewModel by viewModels()
 
     private lateinit var menu: Menu
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentHeadlineBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -61,11 +57,8 @@ class HomeFragment : BaseFragment(), MenuProvider {
                         adapter.submitList(it)*/
 
                         val callback = object : OnClickListener {
-                            override fun onClick(articleResponse: ArticleResponse) {
-                                val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(
-                                    articleResponse
-                                )
-                                findNavController().navigate(action)
+                            override fun onClick(articleResponse: HeadlineArticle) {
+
                             }
                         }
 

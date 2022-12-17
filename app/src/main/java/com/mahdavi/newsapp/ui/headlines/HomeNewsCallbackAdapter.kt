@@ -1,4 +1,4 @@
-package com.mahdavi.newsapp.ui.home
+package com.mahdavi.newsapp.ui.headlines
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.mahdavi.newsapp.R
-import com.mahdavi.newsapp.data.model.remote.ArticleResponse
+import com.mahdavi.newsapp.data.model.HeadlineArticle
 import com.mahdavi.newsapp.databinding.ItemNewsBinding
 
 class HomeNewsCallbackAdapter(private val callBack: OnClickListener?) :
@@ -73,5 +73,5 @@ private class DiffCallback1 : DiffUtil.ItemCallback<ItemArticleUiState>() {
 }
 
 interface OnClickListener {
-    fun onClick(articleResponse: ArticleResponse)
+    fun onClick(articleResponse: HeadlineArticle)
 }

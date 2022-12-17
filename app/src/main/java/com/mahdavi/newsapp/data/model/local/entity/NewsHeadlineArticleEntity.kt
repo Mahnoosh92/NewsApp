@@ -3,11 +3,10 @@ package com.mahdavi.newsapp.data.model.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.google.gson.annotations.SerializedName
-import com.mahdavi.newsapp.data.model.remote.ArticleResponse
+import com.mahdavi.newsapp.data.model.HeadlineArticle
 
-@Entity(tableName = "articles")
-data class Article(
+@Entity(tableName = "headline_articles")
+data class NewsHeadlineArticleEntity(
     @PrimaryKey(autoGenerate = true) val idTable: Int = 0,
     @ColumnInfo(name = "_id") val id: String?,
     @ColumnInfo(name = "_score") val score: String?,
@@ -30,7 +29,7 @@ data class Article(
     @ColumnInfo(name = "twitter_account") val twitterAccount: String?
 ) {
 
-    fun toArticleResponse() = ArticleResponse(
+    fun toHeadlineArticle() = HeadlineArticle(
         id = id,
         score = score,
         author = author,
@@ -52,6 +51,3 @@ data class Article(
         twitterAccount = twitterAccount
     )
 }
-
-
-data class Source(val id: String?, val name: String?)

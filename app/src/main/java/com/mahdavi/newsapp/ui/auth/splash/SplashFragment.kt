@@ -64,7 +64,7 @@ class SplashFragment : BaseFragment() {
     }
 
     private fun navigateToHome() {
-        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.homeFragment)
+        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
         findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
     }
 

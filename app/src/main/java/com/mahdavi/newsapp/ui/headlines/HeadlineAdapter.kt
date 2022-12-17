@@ -1,18 +1,16 @@
-package com.mahdavi.newsapp.ui.home
+package com.mahdavi.newsapp.ui.headlines
 
-import android.provider.SyncStateContract.Helpers.update
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import coil.transform.CircleCropTransformation
 import com.mahdavi.newsapp.R
-import com.mahdavi.newsapp.data.model.remote.ArticleResponse
+import com.mahdavi.newsapp.data.model.HeadlineArticle
 import com.mahdavi.newsapp.databinding.ItemNewsBinding
 
-class HomeNewsAdapter(private val onClick: (ArticleResponse) -> Unit) :
+class HomeNewsAdapter(private val onClick: (HeadlineArticle) -> Unit) :
     ListAdapter<ItemArticleUiState, RecyclerView.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -28,7 +26,7 @@ class HomeNewsAdapter(private val onClick: (ArticleResponse) -> Unit) :
 
 class NewsItemViewHolder(
     private val binding: ItemNewsBinding,
-    onClick: (ArticleResponse) -> Unit
+    onClick: (HeadlineArticle) -> Unit
 ) :
     RecyclerView.ViewHolder(binding.root) {
     private var currentUiState: ItemArticleUiState? = null

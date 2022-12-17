@@ -47,7 +47,6 @@ class LoginFragment : BaseFragment() {
                 binding.apply {
                     loginUiState.areInputsValid?.let {
                         loginButton.isEnabled = loginUiState.areInputsValid
-                        viewModel.consumeAreInputsValid()
                     }
                     loginUiState.loginResult?.let { loginResult ->
                         if (loginResult.isLoggedIn == true) {
@@ -104,7 +103,7 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun navigateToHome() {
-        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.homeFragment)
+        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
         findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
     }
 }
