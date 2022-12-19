@@ -1,14 +1,13 @@
-package com.mahdavi.newsapp.data.model.remote.searchedNews
+package com.mahdavi.newsapp.data.model.remote.news
 
 import com.google.gson.annotations.SerializedName
-import com.mahdavi.newsapp.data.model.SearchedArticle
-import com.mahdavi.newsapp.data.model.local.entity.SearchedNewsArticleEntity
+import com.mahdavi.newsapp.data.model.local.entity.HeadlineArticleEntity
 
-data class SearchedNewsArticle(
+data class RemoteHeadlineArticle(
     @SerializedName("_id") val id: String?,
-    @SerializedName("_score") val score: Int?,
+    @SerializedName("_score") val score: String?,
     @SerializedName("author") val author: String?,
-//    @SerializedName("authors") val authors: List<String>?,
+    @SerializedName("authors") val authors: String?,
     @SerializedName("clean_url") val cleanUrl: String?,
     @SerializedName("country") val country: String?,
     @SerializedName("excerpt") val excerpt: String?,
@@ -25,11 +24,12 @@ data class SearchedNewsArticle(
     @SerializedName("topic") val topic: String?,
     @SerializedName("twitter_account") val twitterAccount: String?
 ) {
-    fun toSearchedNewsArticleEntity() = SearchedNewsArticleEntity(
+
+    fun toHeadlineArticleEntity() = HeadlineArticleEntity(
         id = id,
         score = score,
         author = author,
-//       authors = authors,
+        authors = authors,
         cleanUrl = cleanUrl,
         country = country,
         excerpt = excerpt,
@@ -47,11 +47,11 @@ data class SearchedNewsArticle(
         twitterAccount = twitterAccount
     )
 
-    fun toSearchedArticle() = SearchedArticle(
+    fun toHeadlineArticle() = HeadlineArticle(
         id = id,
         score = score,
         author = author,
-//        authors = authors,
+        authors = authors,
         cleanUrl = cleanUrl,
         country = country,
         excerpt = excerpt,
@@ -68,4 +68,5 @@ data class SearchedNewsArticle(
         topic = topic,
         twitterAccount = twitterAccount
     )
+
 }

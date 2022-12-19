@@ -1,10 +1,10 @@
-package com.mahdavi.newsapp.data.model.remote.newsHeadline
+package com.mahdavi.newsapp.data.model.remote.news
 
 import com.google.gson.annotations.SerializedName
 import com.mahdavi.newsapp.data.model.remote.UserInput
 
-data class NewsHeadLine(
-    @SerializedName("articles") val articles: List<NewsHeadlineArticle?>?,
+data class HeadLineNews(
+    @SerializedName("articles") val articles: List<RemoteHeadlineArticle?>?,
     @SerializedName("page") val page: Int?,
     @SerializedName("page_size")  val pageSize: Int?,
     @SerializedName("status") val status: String?,

@@ -1,56 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmerFrameLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-
-            <include layout="@layout/shimmer_placeholder_layout" />
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
+    android:layout_height="match_parent"
+    android:paddingTop="@dimen/padding_20"
+    android:paddingHorizontal="@dimen/padding_10"
+    android:orientation="vertical">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_view"
+        android:id="@+id/recycle_view_titles"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:background="?attr/appBackgroundColor"
-        android:visibility="gone"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/margin_16"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/item_headline" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_view_headlines"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/appBackgroundColor"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_news" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

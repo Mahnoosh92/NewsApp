@@ -40,7 +40,10 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.headlineFragment, R.id.favoriteFragment, R.id.settingFragment
+                R.id.headlineFragment,
+                R.id.searchFragment,
+                R.id.favoriteFragment,
+                R.id.settingFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -55,16 +58,13 @@ class MainActivity : AppCompatActivity() {
     private fun setupNav() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.headlineFragment -> showBottomNav()
-                R.id.favoriteFragment -> showBottomNav()
-                R.id.settingFragment -> showBottomNav()
+                R.id.headlineFragment, R.id.favoriteFragment, R.id.settingFragment, R.id.searchFragment -> showBottomNav()
                 else -> hideBottomNav()
             }
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.splashFragment -> hideAppbar()
-                R.id.loginFragment -> hideAppbar()
+                R.id.splashFragment, R.id.loginFragment -> hideAppbar()
                 else -> showAppbar()
             }
         }

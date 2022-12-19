@@ -1,15 +1,11 @@
-package com.mahdavi.newsapp.data.model.remote.newsHeadline
+package com.mahdavi.newsapp.data.model.remote.news
 
-import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import com.mahdavi.newsapp.data.model.HeadlineArticle
-import com.mahdavi.newsapp.data.model.local.entity.NewsHeadlineArticleEntity
-import kotlinx.parcelize.Parcelize
+import com.mahdavi.newsapp.data.model.local.entity.SearchedArticleEntity
 
-@Parcelize
-data class NewsHeadlineArticle(
+data class RemoteSearchedArticle(
     @SerializedName("_id") val id: String?,
-    @SerializedName("_score") val score: String?,
+    @SerializedName("_score") val score: Double?,
     @SerializedName("author") val author: String?,
     @SerializedName("authors") val authors: String?,
     @SerializedName("clean_url") val cleanUrl: String?,
@@ -27,13 +23,12 @@ data class NewsHeadlineArticle(
     @SerializedName("title") val title: String?,
     @SerializedName("topic") val topic: String?,
     @SerializedName("twitter_account") val twitterAccount: String?
-) : Parcelable {
-
-    fun toNewsHeadlineArticleEntity() = NewsHeadlineArticleEntity(
+) {
+    fun toSearchedArticleEntity() = SearchedArticleEntity(
         id = id,
         score = score,
         author = author,
-        authors = authors,
+//       authors = authors,
         cleanUrl = cleanUrl,
         country = country,
         excerpt = excerpt,
@@ -51,11 +46,11 @@ data class NewsHeadlineArticle(
         twitterAccount = twitterAccount
     )
 
-    fun toHeadlineArticle() = HeadlineArticle(
+    fun toSearchedArticle() = SearchedArticle(
         id = id,
         score = score,
         author = author,
-        authors = authors,
+//        authors = authors,
         cleanUrl = cleanUrl,
         country = country,
         excerpt = excerpt,

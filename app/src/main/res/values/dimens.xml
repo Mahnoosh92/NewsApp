@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    radius   -->
+    <!-- radius -->
     <dimen name="radius_20">20dp</dimen>
     <dimen name="radius_30">30dp</dimen>
     <dimen name="radius_50">50dp</dimen>
@@ -30,16 +30,23 @@
     <!-- elevation -->
     <dimen name="elevation_8">8dp</dimen>
     <dimen name="elevation_10">10dp</dimen>
+
     <!-- home -->
     <dimen name="newsImageSize">120dp</dimen>
+
     <!-- shimmer -->
     <dimen name="activityPadding">120dp</dimen>
     <dimen name="placeholderImage">120dp</dimen>
     <dimen name="placeholderTextHeight">8dp</dimen>
     <dimen name="padding_10">10dp</dimen>
 
+    <!-- fixed -->
+    <dimen name="fixed_48">48dp</dimen>
     <!-- login -->
     <dimen name="image_back_login">300dp</dimen>
     <!-- setting -->
     <dimen name="image_up_setting_height">300dp</dimen>
+    <!-- headline -->
+    <dimen name="card_headline_width">250dp</dimen>
+    <dimen name="card_headline_height">150dp</dimen>
 </resources>

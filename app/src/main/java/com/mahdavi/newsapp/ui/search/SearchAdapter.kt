@@ -1,5 +1,4 @@
-package com.mahdavi.newsapp.ui.headlines
-
+package com.mahdavi.newsapp.ui.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,10 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.mahdavi.newsapp.R
-import com.mahdavi.newsapp.data.model.remote.news.HeadlineArticle
+import com.mahdavi.newsapp.data.model.remote.news.SearchedArticle
 import com.mahdavi.newsapp.databinding.ItemNewsBinding
 
-class HeadlineAdapter : ListAdapter<HeadlineArticle, RecyclerView.ViewHolder>(Callback()) {
+class SearchAdapter : ListAdapter<SearchedArticle, RecyclerView.ViewHolder>(DiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding =
@@ -31,7 +30,7 @@ class NewsItemViewHolder(
 
     fun bind(
         itemArticleUiState
-        : HeadlineArticle
+        : SearchedArticle
     ) {
 
 
@@ -50,16 +49,16 @@ class NewsItemViewHolder(
     }
 }
 
-private class Callback : DiffUtil.ItemCallback<HeadlineArticle>() {
+private class DiffCallback : DiffUtil.ItemCallback<SearchedArticle>() {
 
     override fun areItemsTheSame(
-        oldItem: HeadlineArticle, newItem: HeadlineArticle
+        oldItem: SearchedArticle, newItem: SearchedArticle
     ): Boolean {
         return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(
-        oldItem: HeadlineArticle, newItem: HeadlineArticle
+        oldItem: SearchedArticle, newItem: SearchedArticle
     ): Boolean {
         return oldItem == newItem
     }

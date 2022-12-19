@@ -1,19 +1,19 @@
 package com.mahdavi.newsapp.data.repository.news
 
-import android.util.Log
+import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSource
-import com.mahdavi.newsapp.data.model.HeadlineArticle
+import com.mahdavi.newsapp.data.model.local.HeadlineTitle
+import com.mahdavi.newsapp.data.model.remote.news.HeadlineArticle
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
-import com.mahdavi.newsapp.data.model.local.entity.NewsHeadlineArticleEntity
-import com.mahdavi.newsapp.data.model.remote.newsHeadline.NewsHeadlineArticle
-import com.mahdavi.newsapp.di.DefaultDispatcher
+import com.mahdavi.newsapp.data.model.local.entity.HeadlineArticleEntity
+import com.mahdavi.newsapp.data.model.local.entity.SearchedArticleEntity
+import com.mahdavi.newsapp.data.model.remote.news.RemoteSearchedArticle
+import com.mahdavi.newsapp.data.model.remote.news.SearchedArticle
 import com.mahdavi.newsapp.di.IoDispatcher
 import com.mahdavi.newsapp.utils.extensions.getApiError
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -39,12 +39,12 @@ class NewsRepositoryImpl @Inject constructor(
                     response.body()?.articles
                 }
                 .map { articleResponseList ->
-                    clearDataBase()
+                    clearHeadlines()
                         .onCompletion {
                             articleResponseList?.let {
-                                updateDataBase(it.filterNotNull()
+                                updateHeadlines(it.filterNotNull()
                                     .map { articleResponse ->
-                                        articleResponse.toNewsHeadlineArticleEntity()
+                                        articleResponse.toHeadlineArticleEntity()
                                     })
                                     .collect()
                             }
@@ -75,79 +75,74 @@ class NewsRepositoryImpl @Inject constructor(
                 .collect()
         }
 
-    private fun clearDataBase() = localDataSource.clearHeadlines()
-    private fun updateDataBase(list: List<NewsHeadlineArticleEntity>) =
-        localDataSource.updateHeadlines(list)
-}
-
-/*
-class NewsRepositoryImpl @Inject constructor(
-    private val newsRemoteDataSource: NewsRemoteDataSource,
-    private val newsLocalDataSource: NewsLocalDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
-) : NewsRepository {
-    override suspend fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>>?> =
-        flow {
-            newsRemoteDataSource.getLatestHeadlines(topic)
-                .map { response ->
-                    try {
-                        if (!response.isSuccessful) {
-                            throw Exception(response.getApiError()?.message)
-                        }
-                    } catch (e: Exception) {
-                        emit(ResultWrapper.build {
-                            throw e
-                        })
-                    }
-                    response.body()?.articles
-                }
-                .map { articleResponseList ->
-                    clearLocalHeadlines()
-                        .onCompletion {
-                            articleResponseList?.let {
-                                updateLocalHeadlines(it.filterNotNull()
-                                    .map { articleResponse ->
-                                        articleResponse.toNewsHeadlineArticleEntity()
-                                    })
-                                    .flowOn(ioDispatcher)
-                                    .catch { error ->
-                                        Timber.e(error)
-                                    }
-                                    .collect()
-                            }
-                        }
-                        .flowOn(ioDispatcher)
-                        .catch { error ->
-                            Timber.e(error)
-                        }
-                        .collect()
-                }
-                .map {
-                    getLocalHeadLines()
-                        .onEach {
-                            emit(ResultWrapper.build {
-                                it.map { article ->
-                                    article.toHeadlineArticle()
-                                }
-                            })
-                        }
-                        .flowOn(ioDispatcher)
-                        .catch { error ->
-                            Timber.e(error)
-                        }
-                        .collect()
-                }
-                .flowOn(ioDispatcher)
-                .catch { error ->
-                    emit(ResultWrapper.build {
-                        throw error
+    override fun searchNews(
+        topic: String,
+        from: String,
+        countries: String,
+        page_size: Int
+    ): Flow<ResultWrapper<Exception, List<SearchedArticle?>>?> = channelFlow {
+        remoteDataSource.searchNews(
+            topic = topic,
+            from = from,
+            countries = countries,
+            page_size = page_size
+        )
+            .map { response ->
+                if (!response.isSuccessful) {
+                    send(ResultWrapper.build {
+                        throw Exception(response.getApiError()?.message)
                     })
                 }
-                .collect()
-        }
+                response.body()?.articles
+            }
+            .map { listarticles ->
+                listarticles?.let { list ->
+                    clearSearchedArticles()
+                        .onCompletion {
+                            updateSearchedArticles(
+                                list.filterNotNull()
+                                    .map(RemoteSearchedArticle::toSearchedArticleEntity)
+                            )
+                                .catch { error -> Timber.e(error) }
+                                .collect()
+                        }
+                        .catch { error -> Timber.e(error) }
+                        .collect()
+                }
+            }
+            .map {
+                localDataSource.getSearchedArticles()
+                    .catch { error ->
+                        send(ResultWrapper.build {
+                            throw error
+                        })
+                    }
+                    .collect { list ->
+                        send(ResultWrapper.build {
+                            list.map {
+                                it.toSearchedArticle()
+                            }
+                        })
+                    }
+            }
+            .catch { error ->
+                send(ResultWrapper.build {
+                    throw error
+                })
+            }
+            .collect()
 
-    private fun clearLocalHeadlines() = newsLocalDataSource.clearHeadlines()
-    private fun updateLocalHeadlines(list: List<NewsHeadlineArticleEntity>) =
-        newsLocalDataSource.updateHeadlines(list)
-    private fun getLocalHeadLines() = newsLocalDataSource.getHeadlines()
-}*/
+    }
+
+    override fun getHeadlinesTitle() = localDataSource.getHeadlinesTitle()
+
+
+    private fun clearHeadlines() = localDataSource.clearHeadlines()
+    private fun updateHeadlines(list: List<HeadlineArticleEntity>) =
+        localDataSource.updateHeadlines(list)
+
+    private fun clearSearchedArticles() = localDataSource.clearSearchedArticles()
+    private fun updateSearchedArticles(list: List<SearchedArticleEntity>) =
+        localDataSource.updateSearchedArticles(list)
+}
+

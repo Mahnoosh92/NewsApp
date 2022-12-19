@@ -1,7 +1,7 @@
 package com.mahdavi.newsapp.data.api
 
-import com.mahdavi.newsapp.data.model.remote.newsHeadline.NewsHeadLine
-import com.mahdavi.newsapp.data.model.remote.searchedNews.SearchedNews
+import com.mahdavi.newsapp.data.model.remote.news.HeadLineNews
+import com.mahdavi.newsapp.data.model.remote.news.SearchedNews
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,7 +11,7 @@ interface ApiService {
     suspend fun getLatestHeadlines(
         @Query("topic") topic: String,
         @Query("countries") countries: String = "US"
-    ): Response<NewsHeadLine>
+    ): Response<HeadLineNews>
 
     @GET("search")
     suspend fun searchNews(

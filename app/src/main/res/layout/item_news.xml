@@ -18,7 +18,7 @@
             android:layout_width="@dimen/newsImageSize"
             android:layout_height="@dimen/newsImageSize"
             android:scaleType="centerCrop"
-            tools:src="@drawable/square"
+            tools:src="@drawable/news"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

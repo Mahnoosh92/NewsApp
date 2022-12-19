@@ -3,15 +3,15 @@ package com.mahdavi.newsapp.data.model.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mahdavi.newsapp.data.model.HeadlineArticle
+import com.mahdavi.newsapp.data.model.remote.news.SearchedArticle
 
-@Entity(tableName = "headline_articles")
-data class NewsHeadlineArticleEntity(
+@Entity(tableName = "searched_articles")
+data class SearchedArticleEntity(
     @PrimaryKey(autoGenerate = true) val idTable: Int = 0,
     @ColumnInfo(name = "_id") val id: String?,
-    @ColumnInfo(name = "_score") val score: String?,
+    @ColumnInfo(name = "_score") val score: Double?,
     @ColumnInfo(name = "author") val author: String?,
-    @ColumnInfo(name = "authors") val authors: String?,
+//    @ColumnInfo(name = "authors") val authors: List<String>?,
     @ColumnInfo(name = "clean_url") val cleanUrl: String?,
     @ColumnInfo(name = "country") val country: String?,
     @ColumnInfo(name = "excerpt") val excerpt: String?,
@@ -28,12 +28,11 @@ data class NewsHeadlineArticleEntity(
     @ColumnInfo(name = "topic") val topic: String?,
     @ColumnInfo(name = "twitter_account") val twitterAccount: String?
 ) {
-
-    fun toHeadlineArticle() = HeadlineArticle(
+    fun toSearchedArticle() = SearchedArticle(
         id = id,
         score = score,
         author = author,
-        authors = authors,
+//        authors = authors,
         cleanUrl = cleanUrl,
         country = country,
         excerpt = excerpt,

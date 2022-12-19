@@ -1,14 +1,11 @@
-package com.mahdavi.newsapp.data.model
+package com.mahdavi.newsapp.data.model.remote.news
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
 
-@Parcelize
-data class HeadlineArticle(
+data class SearchedArticle(
     val id: String?,
-    val score: String?,
+    val score: Double?,
     val author: String?,
-    val authors: String?,
+//    val authors: List<String>?,
     val cleanUrl: String?,
     val country: String?,
     val excerpt: String?,
@@ -24,4 +21,5 @@ data class HeadlineArticle(
     val title: String?,
     val topic: String?,
     val twitterAccount: String?
-): Parcelable
+)
+

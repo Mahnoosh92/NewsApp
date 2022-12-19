@@ -2,13 +2,13 @@ package com.mahdavi.newsapp.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.mahdavi.newsapp.data.model.local.entity.NewsHeadlineArticleEntity
-import com.mahdavi.newsapp.data.model.local.entity.SearchedNewsArticleEntity
+import com.mahdavi.newsapp.data.model.local.entity.HeadlineArticleEntity
+import com.mahdavi.newsapp.data.model.local.entity.SearchedArticleEntity
 
 
 @Database(
-    entities = [NewsHeadlineArticleEntity::class, SearchedNewsArticleEntity::class],
-    version = 1,
+    entities = [HeadlineArticleEntity::class, SearchedArticleEntity::class],
+    version = 2,
     exportSchema = false
 )
 abstract class AppDataBase : RoomDatabase() {

@@ -40,4 +40,39 @@
     <!-- registerFragment -->
     <string name="successful_registration">Successful registration</string>
     <string name="unsuccessful_registration">Please try again</string>
+    <!-- headlineFragment -->
+    <string name="news">news</string>
+    <string name="sport">sport</string>
+    <string name="tech">tech</string>
+    <string name="world">world</string>
+    <string name="finance">finance</string>
+    <string name="politics">politics</string>
+    <string name="business">business</string>
+    <string name="economics">economics</string>
+    <string name="entertainment">entertainment</string>
+    <string name="beauty">beauty</string>
+    <string name="travel">travel</string>
+    <string name="music">music</string>
+    <string name="food">food</string>
+    <string name="science">science</string>
+    <string name="gaming">gaming</string>
+    <string name="energy">energy</string>
+    <string-array name="headlineSources">
+        <item>@string/news</item>
+        <item>@string/sport</item>
+        <item>@string/tech</item>
+        <item>@string/world</item>
+        <item>@string/finance</item>
+        <item>@string/politics</item>
+        <item>@string/business</item>
+        <item>@string/economics</item>
+        <item>@string/entertainment</item>
+        <item>@string/beauty</item>
+        <item>@string/travel</item>
+        <item>@string/music</item>
+        <item>@string/food</item>
+        <item>@string/science</item>
+        <item>@string/gaming</item>
+        <item>@string/energy</item>
+    </string-array>
 </resources>

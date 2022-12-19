@@ -1,19 +1,14 @@
 package com.mahdavi.newsapp.ui.headlines
 
-import android.os.Parcelable
 import androidx.lifecycle.*
-import com.mahdavi.newsapp.data.model.HeadlineArticle
-import com.mahdavi.newsapp.data.model.local.ResultWrapper.Error
-import com.mahdavi.newsapp.data.model.local.ResultWrapper.Value
+import com.mahdavi.newsapp.data.model.local.HeadlineTitle
+import com.mahdavi.newsapp.data.model.local.ResultWrapper
+import com.mahdavi.newsapp.data.model.remote.news.HeadlineArticle
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
-import com.mahdavi.newsapp.data.repository.news.headline.HeadlineRepository
-import com.mahdavi.newsapp.di.IoDispatcher
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.parcelize.Parcelize
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,8 +17,9 @@ class HeadlineViewModel @Inject constructor(
     private val newsRepository: NewsRepository
 ) : ViewModel() {
 
-    private val _articles = MutableStateFlow(HomeUiState())
+    private val _articles = MutableStateFlow(HeadlineUiState())
     val articles = _articles.asStateFlow()
+
 
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         _articles.update {
@@ -31,67 +27,85 @@ class HeadlineViewModel @Inject constructor(
         }
     }
 
-    fun getQuery(input: StateFlow<String>) {
-        viewModelScope.launch(exceptionHandler) {
-            input
-                .debounce(2000L)
-                .distinctUntilChanged()
-                .filter {
-                    it.isNotEmpty()
-                }
-                .flatMapLatest { topic ->
-                    newsRepository.getLatestHeadlines(topic)
-                }
-                .catch { error ->
-                    Timber.e(error)
-                    _articles.update { homeUiState ->
-                        homeUiState.copy(
-                            error = error.message, loading = false
-                        )
+    fun updateTitles() {
+        viewModelScope.launch {
+            newsRepository.getHeadlinesTitle()
+                .map { titles ->
+                    _articles.update {
+                        it.copy(titles = titles)
                     }
-                }.collect { result ->
+                    titles
+                }
+                .flatMapLatest { list ->
+                    newsRepository.getLatestHeadlines(list.filter{it.isSelected}.get(0).title)
+                }
+                .catch { }
+                .collect{result->
                     when (result) {
-                        is Value -> {
-                            _articles.update { homeUiState ->
-                                homeUiState.copy(
-                                    data = result.value.filterNotNull().map {
-                                        ItemArticleUiState(it) {
-                                            //TODO:R&D
-                                        }
-                                    }, loading = false
-                                )
+                        is ResultWrapper.Value -> {
+                            _articles.update { headlineUiState ->
+                                headlineUiState.copy(data = result.value)
                             }
                         }
-                        is Error -> {
-                            _articles.update { homeUiState ->
-                                homeUiState.copy(
-                                    error = result.error.message, loading = false
-                                )
+                        is ResultWrapper.Error -> {
+                            _articles.update { headlineUiState ->
+                                headlineUiState.copy(error = result.error.message)
                             }
                         }
-                        else -> {
-                            throw  IllegalArgumentException("wrong args")
-                        }
+                        else -> {}
                     }
                 }
         }
     }
 
-    fun consume() {
-        _articles.update { homeUiState ->
-            homeUiState.copy(error = null)
+    fun updateListTitles(headlineTitle: HeadlineTitle) {
+        _articles.update { headlineUiState ->
+            val titles = headlineUiState.titles?.map { headlineT ->
+                if (headlineT.title == headlineTitle.title) {
+                    headlineT.copy(isSelected = true)
+                } else {
+                    headlineT.copy(isSelected = false)
+                }
+            }
+            createHeadlines(titles?.filter{it.isSelected})
+            headlineUiState.copy(titles = titles)
         }
     }
+
+    private fun createHeadlines(headlineTitle: List<HeadlineTitle>?) {
+        headlineTitle?.let{
+            viewModelScope.launch(exceptionHandler) {
+                newsRepository.getLatestHeadlines(it.get(0).title)
+                    .map { result ->
+                        when (result) {
+                            is ResultWrapper.Value -> {
+                                _articles.update { headlineUiState ->
+                                    headlineUiState.copy(data = result.value)
+                                }
+                            }
+                            is ResultWrapper.Error -> {
+                                _articles.update { headlineUiState ->
+                                    headlineUiState.copy(error = result.error.message)
+                                }
+                            }
+                            else -> {}
+                        }
+                    }
+                    .catch { error -> Timber.e(error) }
+                    .collect()
+            }
+        }
+    }
+
 }
 
-@Parcelize
-data class ItemArticleUiState(
-    val article: HeadlineArticle, val onClick: (HeadlineArticle) -> Unit
-) : Parcelable
-
-data class HomeUiState(
-    val data: List<ItemArticleUiState>? = null,
+data class HeadlineUiState(
+    val data: List<HeadlineArticle?>? = null,
+    val titles: List<HeadlineTitle>? = null,
     val error: String? = null,
     val loading: Boolean? = null
 )
+
+
+
 
