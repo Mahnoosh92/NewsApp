@@ -21,6 +21,7 @@ import com.mahdavi.newsapp.utils.extensions.action
 import com.mahdavi.newsapp.utils.extensions.getQueryTextStateFlow
 import com.mahdavi.newsapp.utils.extensions.setStrockColor
 import com.mahdavi.newsapp.utils.extensions.shortSnackBar
+import com.mahdavi.newsapp.utils.widgets.ProgressButtonCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -50,7 +51,7 @@ class RegisterFragment : BaseFragment() {
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { registrationUiState ->
                 binding.apply {
-                    registerButton.isEnabled = registrationUiState.areInputsValid
+                    registerButton.isEnabled(registrationUiState.areInputsValid)
                     registrationUiState.emailInvalidationResult?.let {
                         if (it.isSuccess) {
                             usernameRegister.error = null
@@ -69,6 +70,7 @@ class RegisterFragment : BaseFragment() {
                         }
                         viewModel.consumePasswordInvalidationResult()
                     }
+                    registerButton.setLoading(false)
                     registrationUiState.registerResult?.let { registerResult ->
                         if (registerResult.isRegistered == true) {
                             binding.root.shortSnackBar(getString(R.string.successful_registration))
@@ -93,9 +95,13 @@ class RegisterFragment : BaseFragment() {
                     password.getQueryTextStateFlow()
                 )
             }
-            registerButton.setOnClickListener {
-                viewModel.registerUser(username.text.toString(), password.text.toString())
-            }
+            registerButton.onClick(object: ProgressButtonCallback{
+                override fun onClick() {
+                    registerButton.setLoading(true)
+                    viewModel.registerUser(username.text.toString(), password.text.toString())
+                }
+
+            })
         }
     }
 

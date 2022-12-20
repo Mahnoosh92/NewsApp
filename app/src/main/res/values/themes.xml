@@ -11,8 +11,6 @@
         <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
-        <item name="appBackgroundColor">@color/black_50</item>
     </style>
 
     <style name="headline1" parent="Theme.MaterialComponents">

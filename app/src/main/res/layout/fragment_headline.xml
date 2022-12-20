@@ -13,7 +13,6 @@
         android:id="@+id/recycle_view_titles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/appBackgroundColor"
         android:orientation="horizontal"
         android:layout_marginBottom="@dimen/margin_16"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
@@ -23,7 +22,6 @@
         android:id="@+id/recycle_view_headlines"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/appBackgroundColor"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_news" />
 </LinearLayout>

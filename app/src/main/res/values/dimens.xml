@@ -41,7 +41,8 @@
     <dimen name="padding_10">10dp</dimen>
 
     <!-- fixed -->
-    <dimen name="fixed_48">48dp</dimen>
+    <dimen name="fixed_48_dp">48dp</dimen>
+    <dimen name="fixed_50_dp">50dp</dimen>
     <!-- login -->
     <dimen name="image_back_login">300dp</dimen>
     <!-- setting -->

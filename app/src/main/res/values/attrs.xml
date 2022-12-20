@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <declare-styleable name="AppStyles">
-
-
-        <attr name="appBackgroundColor" format="color" />
-
-
+    <declare-styleable name="ProgressButton">
+        <attr name="text" format="string" />
+        <attr name="loading" format="boolean" />
+        <attr name="enabled" format="boolean" />
     </declare-styleable>
 </resources>

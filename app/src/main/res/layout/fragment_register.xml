@@ -83,17 +83,27 @@
                     android:maxLines="1"
                     android:hint="@string/hint_password_registerFragment" />
             </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.button.MaterialButton
+            <com.mahdavi.newsapp.utils.widgets.ProgressButton
                 android:id="@+id/register_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginVertical="@dimen/margin_16"
-                android:enabled="false"
-                android:text="@string/title_registerFragment"
+                app:enabled="false"
+                app:text="@string/title_registerFragment"
                 app:icon="@drawable/ic_baseline_navigate_next_24"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/password_register" />
+                app:layout_constraintTop_toBottomOf="@id/password_register"
+                />
+<!--            <com.google.android.material.button.MaterialButton-->
+<!--                android:id="@+id/register_button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginVertical="@dimen/margin_16"-->
+<!--                android:enabled="false"-->
+<!--                android:text="@string/title_registerFragment"-->
+<!--                app:icon="@drawable/ic_baseline_navigate_next_24"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/password_register" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

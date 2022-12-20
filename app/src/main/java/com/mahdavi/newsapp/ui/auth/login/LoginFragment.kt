@@ -19,6 +19,7 @@ import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
 import com.mahdavi.newsapp.utils.extensions.*
 import com.mahdavi.newsapp.utils.extensions.action
 import com.mahdavi.newsapp.utils.extensions.shortSnackBar
+import com.mahdavi.newsapp.utils.widgets.ProgressButtonCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -46,7 +47,7 @@ class LoginFragment : BaseFragment() {
             .onEach { loginUiState ->
                 binding.apply {
                     loginUiState.areInputsValid?.let {
-                        loginButton.isEnabled = loginUiState.areInputsValid
+                        loginButton.isEnabled(loginUiState.areInputsValid)
                     }
                     loginUiState.loginResult?.let { loginResult ->
                         if (loginResult.isLoggedIn == true) {
@@ -60,6 +61,7 @@ class LoginFragment : BaseFragment() {
                                 }
                             }
                         }
+                        loginButton.setLoading(false)
                         viewModel.consumeLoginResult()
                     }
                     loginUiState.emailInvalidationResult?.let {
@@ -93,9 +95,14 @@ class LoginFragment : BaseFragment() {
             viewModel.validateInputs(
                 username.getQueryTextStateFlow(), password.getQueryTextStateFlow()
             )
-            loginButton.setOnClickListener {
-                viewModel.login(username.text.toString(), password.text.toString())
-            }
+
+            loginButton.onClick(object : ProgressButtonCallback {
+                override fun onClick() {
+                    loginButton.setLoading(true)
+                    viewModel.login(username.text.toString(), password.text.toString())
+                }
+            })
+
             signupText.setOnClickListener {
                 findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToRegisterFragment())
             }

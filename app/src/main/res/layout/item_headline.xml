@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/headline"
     android:layout_width="wrap_content"
-    android:layout_height="@dimen/fixed_48"
+    android:layout_height="@dimen/fixed_48_dp"
     android:layout_marginEnd="@dimen/margin_8"
     app:cardBackgroundColor="@color/black_100"
     app:cardCornerRadius="@dimen/radius_30"

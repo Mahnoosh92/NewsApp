@@ -96,7 +96,17 @@
                     android:maxLines="1" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.button.MaterialButton
+            <com.mahdavi.newsapp.utils.widgets.ProgressButton
+                android:id="@+id/login_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_16"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/password_login"
+                app:text="@string/title_loginFragment" />
+
+            <!--<com.google.android.material.button.MaterialButton
                 android:id="@+id/login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -106,7 +116,7 @@
                 app:icon="@drawable/ic_baseline_navigate_next_24"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/password_login" />
+                app:layout_constraintTop_toBottomOf="@id/password_login" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
@@ -122,29 +132,29 @@
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/google_login"
+        style="@style/Button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_16"
+        android:backgroundTint="@color/red_500"
         android:text="@string/google_loginFragment"
         app:cornerRadius="@dimen/radius_50"
-        style="@style/Button_login"
         app:icon="@drawable/ic_google"
-        android:backgroundTint="@color/red_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/facebook_login"
         app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/facebook_login"
+        style="@style/Button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_16"
+        android:backgroundTint="@color/blue_500"
         android:text="@string/facebook_loginFragment"
         app:cornerRadius="@dimen/radius_50"
+        app:icon="@drawable/ic_facebook"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:icon="@drawable/ic_facebook"
-        style="@style/Button_login"
-        android:backgroundTint="@color/blue_500"
         app:layout_constraintStart_toEndOf="@+id/google_login" />
 </androidx.constraintlayout.widget.ConstraintLayout>
