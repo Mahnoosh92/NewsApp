@@ -8,7 +8,4 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
     fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>>
-    suspend fun createUserWithEmailAndPassword(email:String, password:String): AuthResult
-    suspend fun signInWithEmailAndPassword(email: String, password: String): AuthResult
-    fun signOut(): Flow<Unit>
 }

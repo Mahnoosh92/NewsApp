@@ -15,11 +15,15 @@ import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceHelperImpl
+import com.mahdavi.newsapp.data.dataSource.remote.auth.AuthDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.auth.AuthDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
+import com.mahdavi.newsapp.data.repository.auth.AuthRepository
+import com.mahdavi.newsapp.data.repository.auth.AuthRepositoryImpl
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
 import com.mahdavi.newsapp.data.repository.news.NewsRepositoryImpl
 import com.mahdavi.newsapp.data.repository.user.UserRepository
@@ -168,6 +172,11 @@ abstract class DataSourceModule {
     abstract fun bindUserDataSource(
         userDataSourceImpl: UserDataSourceImpl
     ): UserDataSource
+
+    @Binds
+    abstract fun bindAuthDataSource(
+        AathDataSourceImpl: AuthDataSourceImpl
+    ): AuthDataSource
 }
 
 @Module
@@ -180,9 +189,15 @@ abstract class RepositoryModule {
     ): NewsRepository
 
     @Binds
+    @Singleton
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
+
+    @Binds
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
 }
 
 @Module

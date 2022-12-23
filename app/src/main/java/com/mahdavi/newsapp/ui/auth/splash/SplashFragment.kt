@@ -1,6 +1,8 @@
 package com.mahdavi.newsapp.ui.auth.splash
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +19,7 @@ import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
 import com.mahdavi.newsapp.utils.extensions.changeNavHostGraph
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
@@ -50,9 +53,12 @@ class SplashFragment : BaseFragment() {
             .onEach { splashUiState ->
                 splashUiState.isCurrentUserSignedIn?.let {
                     if (splashUiState.isCurrentUserSignedIn) {
-                        navigateToHome()
+                        Handler(Looper.getMainLooper()).postDelayed({ navigateToHome() }, 300L)
+
                     } else {
-                        findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+                        Handler(Looper.getMainLooper()).postDelayed(
+                            { findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment()) },
+                            300L)
                     }
                 }
             }
@@ -67,6 +73,7 @@ class SplashFragment : BaseFragment() {
         activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
         findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

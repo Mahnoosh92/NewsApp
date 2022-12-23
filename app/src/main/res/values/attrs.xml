@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ProgressButton">
-        <attr name="text" format="string" />
-        <attr name="loading" format="boolean" />
-        <attr name="enabled" format="boolean" />
+        <attr name="pb_text" format="string" />
+        <attr name="pb_loading" format="boolean" />
+        <attr name="pb_enabled" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="CardView">
+        <attr name="cv_text" format="string" />
+        <attr name="cv_icon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="TextInput">
+        <attr name="ti_hint" format="string" />
+        <attr name="ti_icon" format="reference" />
     </declare-styleable>
 </resources>

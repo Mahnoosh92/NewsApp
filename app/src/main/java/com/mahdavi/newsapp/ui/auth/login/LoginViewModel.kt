@@ -1,6 +1,7 @@
 package com.mahdavi.newsapp.ui.auth.login
 
 import androidx.lifecycle.*
+import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.di.IoDispatcher
 import com.mahdavi.newsapp.ui.auth.register.RegisterResult
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val validator: Validate
 ) : ViewModel() {
@@ -38,7 +39,7 @@ class LoginViewModel @Inject constructor(
 
     fun login(email: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
-            userRepository.signInWithEmailAndPassword(email, password)
+            authRepository.signInWithEmailAndPassword(email, password)
             _loginUiState.update { loginUiState ->
                 loginUiState.copy(loginResult = LoginResult(true, null))
             }

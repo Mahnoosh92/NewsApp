@@ -28,7 +28,6 @@ class FavoriteFragment : BaseFragment() {
     private val binding get() = _binding!!
 
     private val viewModel: FavoriteViewModel by viewModels()
-    private val profileViewModel: ProfileViewModel by viewModels()
 
     @Inject
     lateinit var sharedPreferenceDataSource: SharedPreferenceDataSource
@@ -45,20 +44,11 @@ class FavoriteFragment : BaseFragment() {
     }
 
     override fun setupCollectors() {
-        profileViewModel.profileUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { profileUiState ->
-                if (profileUiState.isSignedIn == false) {
-                    navigateToLogin()
-                }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+
     }
 
     override fun setupListeners() {
-        with(binding) {
-            btn.setOnClickListener {
-                profileViewModel.signOut()
-            }
-        }
+
     }
 
     override fun onDestroyView() {

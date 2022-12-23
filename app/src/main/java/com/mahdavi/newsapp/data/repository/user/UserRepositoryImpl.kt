@@ -17,31 +17,17 @@ class UserRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
 
-    override fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>> = flow {
+    override fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>> = channelFlow {
         userDataSource.getCurrentUser()
             .map(FirebaseUser?::toUser)
             .onEach {
-                emit(ResultWrapper.build { it })
+                send(ResultWrapper.build { it })
             }
             .flowOn(ioDispatcher)
             .catch { e ->
-                emit(ResultWrapper.build { throw e })
+                send(ResultWrapper.build { throw e })
             }
             .collect()
     }
 
-
-    override suspend fun createUserWithEmailAndPassword(
-        email: String,
-        password: String
-    ) = withContext(ioDispatcher) {
-        userDataSource.createUserWithEmailAndPassword(email, password)
-    }
-
-    override suspend fun signInWithEmailAndPassword(email: String, password: String) =
-        withContext(ioDispatcher) {
-            userDataSource.signInWithEmailAndPassword(email, password)
-        }
-
-    override fun signOut() = userDataSource.signOut()
 }

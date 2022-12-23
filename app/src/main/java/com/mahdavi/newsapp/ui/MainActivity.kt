@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.splashFragment, R.id.loginFragment -> hideAppbar()
+                R.id.splashFragment, R.id.loginFragment , R.id.settingFragment-> hideAppbar()
                 else -> showAppbar()
             }
         }

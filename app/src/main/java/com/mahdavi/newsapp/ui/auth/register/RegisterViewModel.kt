@@ -3,6 +3,7 @@ package com.mahdavi.newsapp.ui.auth.register
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.di.DefaultDispatcher
 import com.mahdavi.newsapp.di.IoDispatcher
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val authRepository: AuthRepository,
     private val validator: Validate,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -66,7 +67,7 @@ class RegisterViewModel @Inject constructor(
 
     fun registerUser(email: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
-            val user = userRepository.createUserWithEmailAndPassword(email, password).user
+            val user = authRepository.createUserWithEmailAndPassword(email, password).user
             _registrationUiState.update { registerUiState ->
                 registerUiState.copy(registerResult = RegisterResult(true, null))
             }

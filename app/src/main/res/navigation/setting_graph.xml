@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/setting_graph"
+    app:startDestination="@id/profileFragment"
+    >
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.mahdavi.newsapp.ui.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_profileBottomSheetFragment"
+            app:destination="@id/profileBottomSheetFragment" />
+    </fragment>
+
+    <dialog
+        android:id="@+id/profileBottomSheetFragment"
+        android:name="com.mahdavi.newsapp.ui.profile.bottom_sheet.ProfileBottomSheetFragment"
+        android:label="ProfileBottomSheetFragment"
+        tools:layout="@layout/fragment_profile_bottom_sheet" />
+</navigation>

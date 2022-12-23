@@ -22,8 +22,12 @@
     <string name="button_profile_settingFragment">Profile</string>
 
     <!-- profileFragment -->
-    <string name="name_title_profileFragment">Name</string>
-    <string name="family_title_profileFragment">Family</string>
+    <string name="user_display_name_hint_profileFragment">Name</string>
+    <string name="user_email_hint_profileFragment">Email</string>
+
+    <!-- profileBottomSheetFragment -->
+    <string name="camera">Camera</string>
+    <string name="gallery">Gallery</string>
 
     <!-- loginFragment -->
     <string name="title_loginFragment">Login</string>

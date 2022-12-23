@@ -14,7 +14,7 @@ class ProgressButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
 
-    private val binding = ProgressButtonBinding.inflate(LayoutInflater.from(context), this, true)
+    private val binding = ProgressButtonBinding.inflate(LayoutInflater.from(context), this)
     private var callback: ProgressButtonCallback? = null
     // todo user lambda expression
 
@@ -37,10 +37,10 @@ class ProgressButton @JvmOverloads constructor(
             )
 
             binding.apply {
-                buttonText.text = typedArray.getString(R.styleable.ProgressButton_text)
+                buttonText.text = typedArray.getString(R.styleable.ProgressButton_pb_text)
                 progressCircular.isVisible =
-                    typedArray.getBoolean(R.styleable.ProgressButton_loading, false)
-                button.isEnabled = typedArray.getBoolean(R.styleable.ProgressButton_enabled, true)
+                    typedArray.getBoolean(R.styleable.ProgressButton_pb_loading, false)
+                button.isEnabled = typedArray.getBoolean(R.styleable.ProgressButton_pb_enabled, true)
             }
         } catch (exp: Exception) {
             Timber.e(exp)

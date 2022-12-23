@@ -104,7 +104,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/password_login"
-                app:text="@string/title_loginFragment" />
+                app:pb_text="@string/title_loginFragment" />
 
             <!--<com.google.android.material.button.MaterialButton
                 android:id="@+id/login_button"

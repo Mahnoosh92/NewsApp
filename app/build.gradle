@@ -6,6 +6,7 @@ plugins {
     id 'kotlin-parcelize'
     id "androidx.navigation.safeargs.kotlin"
     id 'com.google.gms.google-services'
+    id "com.google.protobuf" version "0.9.1"
 }
 
 android {
@@ -111,6 +112,10 @@ dependencies {
 
     //DataStore
     implementation "androidx.datastore:datastore-preferences:1.0.0"
+    // Proto datastore
+    implementation  "androidx.datastore:datastore:1.0.0"
+    // Starting from Protobuf 3.8.0, use the lite runtime library
+    implementation  "com.google.protobuf:protobuf-javalite:3.21.1"
 
     // Test
     testImplementation 'junit:junit:4.13.2'
@@ -119,4 +124,25 @@ dependencies {
 
     //Test coroutine
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
+}
+
+protobuf {
+    // Configures the Protobuf compilation and the protoc executable
+    protoc {
+        // Downloads from the repositories
+        artifact = "com.google.protobuf:protoc:3.14.0"
+    }
+
+    // Generates the java Protobuf-lite code for the Protobufs in this project
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                // Configures the task output type
+                java {
+                    // Java Lite has smaller code size and is recommended for Android
+                    option 'lite'
+                }
+            }
+        }
+    }
 }

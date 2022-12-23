@@ -1,0 +1,11 @@
+syntax = "proto3";
+option java_package = "com.mahdavi.newsapp";
+option java_multiple_files = true;
+
+message UserPreferences {
+  string name = 1;
+  string email = 2;
+  string photo_url = 3;
+  bool is_email_verified = 4;
+  string uid = 5;
+}
