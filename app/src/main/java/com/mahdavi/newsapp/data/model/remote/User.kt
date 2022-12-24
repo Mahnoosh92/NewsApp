@@ -4,7 +4,7 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseUser
 
 data class User(
-    val name: String?,
+    val displayName: String?,
     val email: String?,
     val photoUrl: Uri?,
     val isEmailVerified: Boolean?,
@@ -14,7 +14,7 @@ data class User(
 fun FirebaseUser?.toUser(): User? {
     this?.let {
         return User(
-            name = this.displayName,
+            displayName = this.displayName,
             email = this.email,
             photoUrl = this.photoUrl,
             isEmailVerified = this.isEmailVerified,

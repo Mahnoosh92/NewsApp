@@ -11,33 +11,40 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <com.google.android.material.card.MaterialCardView
             android:layout_width="@dimen/fixed_150_dp"
             android:layout_height="@dimen/fixed_150_dp"
+            android:layout_marginVertical="@dimen/margin_16"
             app:cardCornerRadius="@dimen/radius_75"
             app:cardElevation="@dimen/elevation_10"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-           app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginVertical="@dimen/margin_16"
-            />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/user_photo_uri"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:src="@drawable/ic_user_circle" />
+        </com.google.android.material.card.MaterialCardView>
+
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/profile_camera"
             android:layout_width="@dimen/fixed_40_dp"
             android:layout_height="@dimen/fixed_40_dp"
+            android:elevation="@dimen/elevation_12"
             android:src="@drawable/ic_camera"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            android:elevation="@dimen/elevation_12"
-            />
+            app:layout_constraintStart_toStartOf="@+id/guideline" />
+
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.55"
-            />
+            app:layout_constraintGuide_percent="0.55" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.card.MaterialCardView
@@ -64,6 +71,7 @@
                 android:inputType="text" />
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.card.MaterialCardView>
+
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,4 +95,11 @@
                 android:inputType="textEmailAddress" />
         </com.google.android.material.textfield.TextInputLayout>
     </com.google.android.material.card.MaterialCardView>
+
+    <com.mahdavi.newsapp.utils.widgets.ProgressButton
+        android:id="@+id/submit_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_16"
+        app:pb_text="@string/submit" />
 </LinearLayout>

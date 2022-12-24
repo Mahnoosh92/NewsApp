@@ -2,6 +2,7 @@ package com.mahdavi.newsapp.data.repository.user
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSource
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.remote.User
@@ -29,5 +30,8 @@ class UserRepositoryImpl @Inject constructor(
             }
             .collect()
     }
+
+    override suspend fun updateProfile(user: UserProfileChangeRequest) =
+        userDataSource.updateProfile(user)
 
 }
