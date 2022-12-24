@@ -2,7 +2,9 @@ package com.mahdavi.newsapp.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
+import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
+import androidx.datastore.dataStoreFile
 import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
@@ -10,7 +12,9 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
+import com.mahdavi.newsapp.UserPreferences
 import com.mahdavi.newsapp.data.api.ApiService
+import com.mahdavi.newsapp.data.dataSource.local.datastore.UserPreferencesSerializer
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
@@ -49,8 +53,9 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
-private const val USER_PREFERENCES = "user_preferences"
-
+private const val ON_BOARDING_PREFERENCES = "on_boarding_preferences"
+private const val USER_PREFERENCES_NAME = "user_preferences"
+private const val DATA_STORE_FILE_NAME = "user_prefs.pb"
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -109,20 +114,26 @@ object PersistenceModule {
     @Provides
     @Singleton
     fun provideSearchedArticleDao(db: AppDataBase) = db.searchedArticleDao()
-//    @Provides
-//    @Singleton
-//    fun provideMyDataStorePreferences(
-//        @ApplicationContext context: Context
-//    ): DataStore<Preferences> = context.myDataStore
 
     @Singleton
     @Provides
     fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
-        return PreferenceDataStoreFactory.create(corruptionHandler = ReplaceFileCorruptionHandler(
-            produceNewData = { emptyPreferences() }),
-            migrations = listOf(SharedPreferencesMigration(appContext, USER_PREFERENCES)),
+        return PreferenceDataStoreFactory.create(
+            corruptionHandler = ReplaceFileCorruptionHandler(produceNewData = { emptyPreferences() }),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob()),
-            produceFile = { appContext.preferencesDataStoreFile(USER_PREFERENCES) })
+            produceFile = { appContext.preferencesDataStoreFile(ON_BOARDING_PREFERENCES) }
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideProtoDataStore(@ApplicationContext appContext: Context): DataStore<UserPreferences> {
+        return DataStoreFactory.create(
+            serializer = UserPreferencesSerializer,
+            produceFile = { appContext.dataStoreFile(DATA_STORE_FILE_NAME) },
+            corruptionHandler = null,
+            scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+        )
     }
 }
 

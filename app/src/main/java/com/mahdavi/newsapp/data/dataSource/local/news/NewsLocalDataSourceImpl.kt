@@ -1,6 +1,5 @@
 package com.mahdavi.newsapp.data.dataSource.local.news
 
-import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.data.db.HeadlineDao
 import com.mahdavi.newsapp.data.db.SearchDao
 import com.mahdavi.newsapp.data.model.local.HeadlineTitle
@@ -11,7 +10,8 @@ import kotlinx.coroutines.flow.channelFlow
 import javax.inject.Inject
 
 class NewsLocalDataSourceImpl @Inject constructor(
-    private val headlineDao: HeadlineDao, private val searchDao: SearchDao
+    private val headlineDao: HeadlineDao,
+    private val searchDao: SearchDao
 ) : NewsLocalDataSource {
     override fun updateHeadlines(articles: List<HeadlineArticleEntity>) = channelFlow {
         headlineDao.insertAll(articles)
