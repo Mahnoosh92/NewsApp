@@ -37,6 +37,7 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
             if (isSuccess) {
                 latestTmpUri?.let { uri ->
                     viewModel.setImageUri(uri)
+                    viewModel.updateProfileInformation(null, uri)
                     findNavController().navigateUp()
                 }
             }
@@ -45,7 +46,9 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
     private val selectImageFromGalleryResult =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
+                viewModel.updateLoadingStatus(true)
                 viewModel.setImageUri(uri)
+                viewModel.updateProfileInformation(null, uri)
                 findNavController().navigateUp()
             }
         }
@@ -88,14 +91,6 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
             takeImageButton.setOnClickListener { takeImage() }
             selectImageButton.setOnClickListener { selectImageFromGallery() }
         }
-        viewModel.profileUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
-            .onEach { profileUiState ->
-                profileUiState.isClosed?.let {
-                    if (it) {
-                        this.dismiss()
-                    }
-                }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

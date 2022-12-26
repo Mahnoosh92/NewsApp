@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
@@ -51,11 +52,30 @@ class ProfileFragment : BaseFragment() {
         viewModel.profileUiState.flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { profileUiState ->
                 with(profileUiState) {
+                    isLoadingPhotoUri?.let {
+                        if (isLoadingPhotoUri) {
+                            binding.apply {
+                                loading.isVisible = true
+                                userPhotoUri.isVisible = false
+                            }
+                        }
+                    }
+                    isUpdatedSuccessfully?.let {
+                        if (isUpdatedSuccessfully) {
+                            binding.apply {
+                                loading.isVisible = false
+                                userPhotoUri.isVisible = true
+                            }
+                            binding.root.shortSnackBar("Photo Updated successfully")
+                        }
+                    }
                     user?.let {
                         binding.apply {
                             userDisplayName.setText(it.displayName)
                             userEmail.setText(it.email)
 //                            userPhotoUri.setImageURI(it.photoUrl)
+                            if (it.photoUrl !== null)
+                                userPhotoUri.isVisible = true
                             userPhotoUri.load(it.photoUrl)
                         }
                     }
@@ -72,7 +92,7 @@ class ProfileFragment : BaseFragment() {
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToProfileBottomSheetFragment())
             }
             submitButton.setOnClickListener {
-                viewModel.updateProfileInformation()
+
             }
         }
     }

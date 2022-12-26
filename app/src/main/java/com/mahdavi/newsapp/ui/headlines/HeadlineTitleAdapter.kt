@@ -28,8 +28,7 @@ class HeadlineTitleAdapter(private val onClick: (HeadlineTitle) -> Unit) :
 class HeadlineItemViewHolder(
     private val binding: ItemHeadlineBinding,
     onClick: (HeadlineTitle) -> Unit
-) :
-    RecyclerView.ViewHolder(binding.root) {
+) : RecyclerView.ViewHolder(binding.root) {
     private var currentUiState: HeadlineTitle? = null
 
     init {
@@ -50,8 +49,13 @@ class HeadlineItemViewHolder(
             //TODO:placeholder and error and loader for coil
 
             headlineTitle.text = itemArticleUiState.title
-            if(itemArticleUiState.isSelected) {
-                headline.setCardBackgroundColor(ContextCompat.getColor(binding.root.context, R.color.purple_500))
+            if (itemArticleUiState.isSelected) {
+                headline.setCardBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        R.color.purple_500
+                    )
+                )
             }
         }
     }

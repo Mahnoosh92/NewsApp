@@ -23,11 +23,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ProgressBar
+                android:id="@+id/loading"
+                android:layout_width="@dimen/fixed_40_dp"
+                android:layout_height="@dimen/fixed_40_dp"
+                android:layout_gravity="center"
+                android:elevation="@dimen/elevation_12"
+                android:visibility="gone" />
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/user_photo_uri"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:src="@drawable/ic_user_circle" />
+                android:src="@drawable/ic_user_circle" />
         </com.google.android.material.card.MaterialCardView>
 
         <androidx.appcompat.widget.AppCompatImageView

@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.headlineFragment,
                 R.id.searchFragment,
                 R.id.favoriteFragment,
-                R.id.settingFragment
+                R.id.settingFragment,
+                R.id.onBoardingFragment
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.splashFragment, R.id.loginFragment , R.id.settingFragment-> hideAppbar()
+                R.id.splashFragment, R.id.loginFragment , R.id.settingFragment, R.id.onBoardingFragment-> hideAppbar()
                 else -> showAppbar()
             }
         }

@@ -16,7 +16,7 @@ class OnBoardingDataSourceImpl @Inject constructor(private val dataStore: DataSt
 
 
     override fun needToShowOnBoarding() = dataStore.data.map { preferences ->
-        preferences[ON_BOARDING_STATUS] ?: false
+        preferences[ON_BOARDING_STATUS]?.not() ?: true
     }
 
     override fun onBoardingConsumed(): Flow<Unit> = flow {

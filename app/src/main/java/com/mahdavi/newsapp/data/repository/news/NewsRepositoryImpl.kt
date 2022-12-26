@@ -24,55 +24,39 @@ class NewsRepositoryImpl @Inject constructor(
 ) : NewsRepository {
 
     override suspend fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>>?> =
-        channelFlow {
+        flow {
             remoteDataSource.getLatestHeadlines(topic)
                 .map { response ->
-                    try {
-                        if (!response.isSuccessful) {
-                            throw Exception(response.getApiError()?.message)
-                        }
-                    } catch (e: Exception) {
-                        send(ResultWrapper.build {
-                            throw e
-                        })
+                    if (!response.isSuccessful) {
+                        throw Exception(response.getApiError()?.message)
                     }
                     response.body()?.articles
                 }
-                .map { articleResponseList ->
-                    clearHeadlines()
-                        .onCompletion {
-                            articleResponseList?.let {
-                                updateHeadlines(it.filterNotNull()
-                                    .map { articleResponse ->
-                                        articleResponse.toHeadlineArticleEntity()
-                                    })
-                                    .collect()
-                            }
-                        }
-                        .collect()
+                .flatMapConcat { articleResponse ->
+                    clearHeadlines().collect()
+                    articleResponse?.let {
+                        updateHeadlines(it.filterNotNull()
+                            .map { articleResponse ->
+                                articleResponse.toHeadlineArticleEntity()
+                            })
+                    } ?: flowOf(Unit)
                 }
-                .map {
+                .flatMapConcat {
                     localDataSource.getHeadlines()
-                        .catch { error ->
-                            send(ResultWrapper.build {
-                                throw error
-                            })
-                        }
-                        .collect {
-                            send(ResultWrapper.build {
-                                it.map { article ->
-                                    article.toHeadlineArticle()
-                                }
-                            })
-                        }
                 }
                 .flowOn(ioDispatcher)
                 .catch { error ->
-                    send(ResultWrapper.build {
+                    emit(ResultWrapper.build {
                         throw error
                     })
                 }
-                .collect()
+                .collect {
+                    emit(ResultWrapper.build {
+                        it.map { article ->
+                            article.toHeadlineArticle()
+                        }
+                    })
+                }
         }
 
     override fun searchNews(
@@ -135,7 +119,6 @@ class NewsRepositoryImpl @Inject constructor(
     }
 
     override fun getHeadlinesTitle() = localDataSource.getHeadlinesTitle()
-
 
     private fun clearHeadlines() = localDataSource.clearHeadlines()
     private fun updateHeadlines(list: List<HeadlineArticleEntity>) =

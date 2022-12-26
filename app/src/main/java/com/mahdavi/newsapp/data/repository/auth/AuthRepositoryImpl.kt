@@ -23,5 +23,4 @@ class AuthRepositoryImpl @Inject constructor(
             authDataSource.signInWithEmailAndPassword(email, password)
         }
 
-    override fun signOut() = authDataSource.signOut()
 }

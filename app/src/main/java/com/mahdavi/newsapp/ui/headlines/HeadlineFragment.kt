@@ -6,9 +6,9 @@ import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentHeadlineBinding
 import com.mahdavi.newsapp.ui.BaseFragment
+import com.mahdavi.newsapp.utils.extensions.shortSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -21,8 +21,6 @@ class HeadlineFragment : BaseFragment() {
 
     private val viewModel: HeadlineViewModel by viewModels()
 
-    private lateinit var menu: Menu
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -31,7 +29,7 @@ class HeadlineFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-        viewModel.updateTitles()
+        viewModel.getHeadlinesForFirstTitle()
     }
 
     override fun setupCollectors() {
@@ -39,8 +37,9 @@ class HeadlineFragment : BaseFragment() {
             .onEach { headlineUiState ->
                 headlineUiState.titles?.let { listTitles ->
                     with(binding) {
-                        val adapterTitles = HeadlineTitleAdapter() { headlineTitle ->
+                        val adapterTitles = HeadlineTitleAdapter { headlineTitle ->
                             viewModel.updateListTitles(headlineTitle)
+                            viewModel.getLatestHeadLines(headlineTitle)
                         }
                         recycleViewTitles.adapter = adapterTitles
                         adapterTitles.submitList(listTitles)
@@ -53,23 +52,20 @@ class HeadlineFragment : BaseFragment() {
                         adapterHeadline.submitList(listHeadlines)
                     }
                 }
+                headlineUiState.error?.let {
+                    binding.root.shortSnackBar(it)
+                }
             }
             .launchIn(viewLifecycleOwner.lifecycleScope)
 
     }
 
     override fun setupListeners() {
-
+        /* NO-OP */
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
-
-    /*override fun onClick(articleResponse: ArticleResponse) {
-        val action = HomeFragmentDirections.actionHomeToDetailsFragment(articleResponse)
-        findNavController().navigate(action)
-    }*/
 }

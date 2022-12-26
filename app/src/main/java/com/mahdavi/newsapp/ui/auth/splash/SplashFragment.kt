@@ -36,33 +36,49 @@ class SplashFragment : BaseFragment() {
     private val viewModel: SplashViewModel by viewModels()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentSplashBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun setupUi() {
-        viewModel.checkUserStatus()
+        viewModel.checkUserAndOnBoardingStatus()
     }
 
     override fun setupCollectors() {
         viewModel.splashUiState
             .flowWithLifecycle(viewLifecycleOwner.lifecycle)
             .onEach { splashUiState ->
-                splashUiState.isCurrentUserSignedIn?.let {
-                    if (splashUiState.isCurrentUserSignedIn) {
-                        Handler(Looper.getMainLooper()).postDelayed({ navigateToHome() }, 300L)
-
+                splashUiState.isOnBoardingRequired?.let {
+                    if (it) {
+                        splashUiState.isCurrentUserSignedIn?.let {
+                            if (splashUiState.isCurrentUserSignedIn) {
+                                viewModel.signOut()
+                            }
+                        }
+                        viewLifecycleOwner.lifecycleScope.launch {
+                            delay(300L)
+                            viewModel.consumeIsOnBoardingRequired()
+                            navigateToOnBoarding()
+                        }
                     } else {
-                        Handler(Looper.getMainLooper()).postDelayed(
-                            { findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment()) },
-                            300L)
+                        splashUiState.isCurrentUserSignedIn?.let {
+                            if (splashUiState.isCurrentUserSignedIn) {
+                                Handler(Looper.getMainLooper()).postDelayed(
+                                    { navigateToHome() }, 300L
+                                )
+
+                            } else {
+                                viewLifecycleOwner.lifecycleScope.launch {
+                                    delay(300L)
+                                    findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
+                                }
+                            }
+                        }
                     }
                 }
-            }
-            .launchIn(viewLifecycleOwner.lifecycleScope)
+            }.launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun setupListeners() {
@@ -74,6 +90,10 @@ class SplashFragment : BaseFragment() {
         findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
     }
 
+    private fun navigateToOnBoarding() {
+        activity?.changeNavHostGraph(R.navigation.onboarding_graph, R.id.onBoardingFragment)
+        findNavController().navigate(InternalDeepLinkHandler.ONBOARDING.toUri())
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -1,11 +1,13 @@
 package com.mahdavi.newsapp.data.dataSource.remote.user
 
+import android.net.Uri
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 import com.mahdavi.newsapp.data.model.remote.User
 import kotlinx.coroutines.disposeOnCancellation
@@ -25,9 +27,13 @@ class UserDataSourceImpl @Inject constructor() : UserDataSource {
         send(auth.currentUser)
     }
 
-    override suspend fun updateProfile(user: UserProfileChangeRequest): Unit =
+    override suspend fun updateProfile(name: String?, url: Uri?): Unit {
+        val request = userProfileChangeRequest {
+            displayName = name ?: auth.currentUser?.displayName
+            photoUri = url ?: auth.currentUser?.photoUrl
+        }
         suspendCancellableCoroutine { continuation ->
-            auth.currentUser?.updateProfile(user)?.addOnCompleteListener { task ->
+            auth.currentUser?.updateProfile(request)?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     continuation.resume(Unit)
                 } else {
@@ -40,6 +46,10 @@ class UserDataSourceImpl @Inject constructor() : UserDataSource {
 
             }
         }
-
+    }
+    override fun signOut() = flow {
+        auth.signOut()
+        emit(Unit)
+    }
 
 }

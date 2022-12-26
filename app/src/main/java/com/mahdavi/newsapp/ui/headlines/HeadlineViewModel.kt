@@ -20,14 +20,13 @@ class HeadlineViewModel @Inject constructor(
     private val _articles = MutableStateFlow(HeadlineUiState())
     val articles = _articles.asStateFlow()
 
-
     private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
         _articles.update {
             it.copy(error = exception.message.toString())
         }
     }
 
-    fun updateTitles() {
+    fun getHeadlinesForFirstTitle() {
         viewModelScope.launch {
             newsRepository.getHeadlinesTitle()
                 .map { titles ->
@@ -37,10 +36,9 @@ class HeadlineViewModel @Inject constructor(
                     titles
                 }
                 .flatMapLatest { list ->
-                    newsRepository.getLatestHeadlines(list.filter{it.isSelected}.get(0).title)
+                    newsRepository.getLatestHeadlines(list.filter { it.isSelected }[0].title)
                 }
-                .catch { }
-                .collect{result->
+                .collect { result ->
                     when (result) {
                         is ResultWrapper.Value -> {
                             _articles.update { headlineUiState ->
@@ -52,7 +50,9 @@ class HeadlineViewModel @Inject constructor(
                                 headlineUiState.copy(error = result.error.message)
                             }
                         }
-                        else -> {}
+                        else -> {
+                            throw IllegalArgumentException("Wrong argument")
+                        }
                     }
                 }
         }
@@ -67,36 +67,35 @@ class HeadlineViewModel @Inject constructor(
                     headlineT.copy(isSelected = false)
                 }
             }
-            createHeadlines(titles?.filter{it.isSelected})
             headlineUiState.copy(titles = titles)
         }
     }
 
-    private fun createHeadlines(headlineTitle: List<HeadlineTitle>?) {
-        headlineTitle?.let{
-            viewModelScope.launch(exceptionHandler) {
-                newsRepository.getLatestHeadlines(it.get(0).title)
-                    .map { result ->
-                        when (result) {
-                            is ResultWrapper.Value -> {
-                                _articles.update { headlineUiState ->
-                                    headlineUiState.copy(data = result.value)
-                                }
+    fun getLatestHeadLines(headlineTitle: HeadlineTitle) {
+        viewModelScope.launch(exceptionHandler) {
+            newsRepository.getLatestHeadlines(headlineTitle.title)
+                .map { result ->
+                    when (result) {
+                        is ResultWrapper.Value -> {
+                            _articles.update { headlineUiState ->
+                                headlineUiState.copy(data = result.value)
                             }
-                            is ResultWrapper.Error -> {
-                                _articles.update { headlineUiState ->
-                                    headlineUiState.copy(error = result.error.message)
-                                }
+                        }
+                        is ResultWrapper.Error -> {
+                            _articles.update { headlineUiState ->
+                                headlineUiState.copy(error = result.error.message)
                             }
-                            else -> {}
+                        }
+                        else -> {
+                            throw IllegalArgumentException("Wrong argument")
                         }
                     }
-                    .catch { error -> Timber.e(error) }
-                    .collect()
-            }
+                }
+                .catch { error -> Timber.e(error) }
+                .collect()
         }
-    }
 
+    }
 }
 
 data class HeadlineUiState(

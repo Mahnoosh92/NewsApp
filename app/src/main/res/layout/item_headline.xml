@@ -10,9 +10,9 @@
     app:cardCornerRadius="@dimen/radius_30"
     app:cardElevation="@dimen/elevation_10">
 
-<!--    <com.google.android.material.chip.Chip-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"/>-->
+    <!--    <com.google.android.material.chip.Chip-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"/>-->
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/headline_title"

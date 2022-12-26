@@ -1,5 +1,6 @@
 package com.mahdavi.newsapp.data.repository.user
 
+import android.net.Uri
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
@@ -31,7 +32,12 @@ class UserRepositoryImpl @Inject constructor(
             .collect()
     }
 
-    override suspend fun updateProfile(user: UserProfileChangeRequest) =
-        userDataSource.updateProfile(user)
+    override suspend fun updateProfile(name: String?, url: Uri?) = flow {
+        userDataSource.updateProfile(name, url)
+        emit(Unit)
+    }
+
+    override fun signOut() = userDataSource.signOut()
+
 
 }

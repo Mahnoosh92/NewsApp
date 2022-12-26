@@ -15,6 +15,8 @@ import com.mahdavi.newsapp.BuildConfig
 import com.mahdavi.newsapp.UserPreferences
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.datastore.UserPreferencesSerializer
+import com.mahdavi.newsapp.data.dataSource.local.datastore.onboarding.OnBoardingDataSource
+import com.mahdavi.newsapp.data.dataSource.local.datastore.onboarding.OnBoardingDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
@@ -30,6 +32,8 @@ import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.data.repository.auth.AuthRepositoryImpl
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
 import com.mahdavi.newsapp.data.repository.news.NewsRepositoryImpl
+import com.mahdavi.newsapp.data.repository.onboarding.OnBoardingRepository
+import com.mahdavi.newsapp.data.repository.onboarding.OnBoardingRepositoryImpl
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepositoryImpl
 import com.mahdavi.newsapp.utils.validate.Validate
@@ -186,8 +190,13 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun bindAuthDataSource(
-        AathDataSourceImpl: AuthDataSourceImpl
+        authDataSourceImpl: AuthDataSourceImpl
     ): AuthDataSource
+
+    @Binds
+    abstract fun bindOnBoardingDataSource(
+        onBoardingDataSourceImpl: OnBoardingDataSourceImpl
+    ): OnBoardingDataSource
 }
 
 @Module
@@ -209,6 +218,11 @@ abstract class RepositoryModule {
     abstract fun bindAuthRepository(
         authRepositoryImpl: AuthRepositoryImpl
     ): AuthRepository
+
+    @Binds
+    abstract fun bindOnBoardingRepository(
+        onBoardingRepositoryImpl: OnBoardingRepositoryImpl
+    ): OnBoardingRepository
 }
 
 @Module

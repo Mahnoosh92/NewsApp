@@ -16,6 +16,7 @@
 
     <!-- general -->
     <string name="submit">Submit</string>
+    <string name="skip">Skip</string>
 
     <!-- homeFragment -->
     <string name="title_homeFragment">Title</string>
@@ -47,6 +48,15 @@
     <!-- registerFragment -->
     <string name="successful_registration">Successful registration</string>
     <string name="unsuccessful_registration">Please try again</string>
-
-
+    <!-- onBoardingFragment -->
+    <string-array name="on_boarding_titles">
+        <item>Title1</item>
+        <item>Title2</item>
+        <item>Title3</item>
+    </string-array>
+    <string-array name="on_boarding_texts">
+        <item>Text1</item>
+        <item>Text2</item>
+        <item>Text3</item>
+    </string-array>
 </resources>

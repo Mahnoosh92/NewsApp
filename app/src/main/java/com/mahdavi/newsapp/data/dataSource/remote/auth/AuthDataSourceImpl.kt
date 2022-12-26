@@ -48,9 +48,4 @@ class AuthDataSourceImpl @Inject constructor() : AuthDataSource {
                 }
             }
         }
-
-    override fun signOut() = channelFlow {
-        auth.signOut()
-        send(Unit)
-    }
 }
