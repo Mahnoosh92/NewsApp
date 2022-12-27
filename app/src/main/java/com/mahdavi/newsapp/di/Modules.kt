@@ -5,7 +5,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.dataStoreFile
-import androidx.datastore.preferences.SharedPreferencesMigration
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.emptyPreferences
@@ -17,6 +16,8 @@ import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.datastore.UserPreferencesSerializer
 import com.mahdavi.newsapp.data.dataSource.local.datastore.onboarding.OnBoardingDataSource
 import com.mahdavi.newsapp.data.dataSource.local.datastore.onboarding.OnBoardingDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.local.favourite.FavouriteLocalDataSource
+import com.mahdavi.newsapp.data.dataSource.local.favourite.FavouriteLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSource
 import com.mahdavi.newsapp.data.dataSource.local.news.NewsLocalDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
@@ -27,13 +28,19 @@ import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.user.UserDataSourceImpl
 import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSource
 import com.mahdavi.newsapp.data.dataSource.remote.news.NewsRemoteDataSourceImpl
+import com.mahdavi.newsapp.data.dataSource.remote.source.SourceRemoteDataSource
+import com.mahdavi.newsapp.data.dataSource.remote.source.SourceRemoteDataSourceImpl
 import com.mahdavi.newsapp.data.db.AppDataBase
 import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.data.repository.auth.AuthRepositoryImpl
+import com.mahdavi.newsapp.data.repository.favourite.FavouriteRepository
+import com.mahdavi.newsapp.data.repository.favourite.FavouriteRepositoryImpl
 import com.mahdavi.newsapp.data.repository.news.NewsRepository
 import com.mahdavi.newsapp.data.repository.news.NewsRepositoryImpl
 import com.mahdavi.newsapp.data.repository.onboarding.OnBoardingRepository
 import com.mahdavi.newsapp.data.repository.onboarding.OnBoardingRepositoryImpl
+import com.mahdavi.newsapp.data.repository.source.SourceRepository
+import com.mahdavi.newsapp.data.repository.source.SourceRepositoryImpl
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepositoryImpl
 import com.mahdavi.newsapp.utils.validate.Validate
@@ -119,6 +126,14 @@ object PersistenceModule {
     @Singleton
     fun provideSearchedArticleDao(db: AppDataBase) = db.searchedArticleDao()
 
+    @Provides
+    @Singleton
+    fun provideSourceDao(db: AppDataBase) = db.sourceDao()
+
+    @Provides
+    @Singleton
+    fun provideFavouriteHeadlineDao(db: AppDataBase) = db.favouriteHeadlineDao()
+
     @Singleton
     @Provides
     fun providePreferencesDataStore(@ApplicationContext appContext: Context): DataStore<Preferences> {
@@ -197,6 +212,16 @@ abstract class DataSourceModule {
     abstract fun bindOnBoardingDataSource(
         onBoardingDataSourceImpl: OnBoardingDataSourceImpl
     ): OnBoardingDataSource
+
+    @Binds
+    abstract fun bindSourceRemoteDataSource(
+        sourceRemoteDataSourceImpl: SourceRemoteDataSourceImpl
+    ): SourceRemoteDataSource
+
+    @Binds
+    abstract fun bindFavouriteLocalDataSource(
+        favouriteLocalDataSourceImpl: FavouriteLocalDataSourceImpl
+    ): FavouriteLocalDataSource
 }
 
 @Module
@@ -223,6 +248,16 @@ abstract class RepositoryModule {
     abstract fun bindOnBoardingRepository(
         onBoardingRepositoryImpl: OnBoardingRepositoryImpl
     ): OnBoardingRepository
+
+    @Binds
+    abstract fun bindSourceRepository(
+        sourceRepositoryImpl: SourceRepositoryImpl
+    ): SourceRepository
+
+    @Binds
+    abstract fun bindFavouriteRepository(
+        favouriteRepositoryImpl: FavouriteRepositoryImpl
+    ): FavouriteRepository
 }
 
 @Module

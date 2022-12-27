@@ -53,6 +53,7 @@
     <dimen name="fixed_48_dp">48dp</dimen>
     <dimen name="fixed_50_dp">50dp</dimen>
     <dimen name="fixed_100_dp">100dp</dimen>
+    <dimen name="fixed_130_dp">130dp</dimen>
     <dimen name="fixed_150_dp">150dp</dimen>
     <dimen name="fixed_250_dp">250dp</dimen>
     <dimen name="fixed_300_dp">300dp</dimen>

@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">NewsApp</string>
-    <string name="title_home">Home</string>
+    <string name="title_home">Headline</string>
     <string name="title_settings">Settings</string>
     <string name="title_favorite">Favorite</string>
 
@@ -48,6 +48,9 @@
     <!-- registerFragment -->
     <string name="successful_registration">Successful registration</string>
     <string name="unsuccessful_registration">Please try again</string>
+    <!-- favouriteFragment -->
+    <string name="favourite_favourite_fragment">Favourite</string>
+    <string name="headlines_favourite_fragment">Headlines</string>
     <!-- onBoardingFragment -->
     <string-array name="on_boarding_titles">
         <item>Title1</item>

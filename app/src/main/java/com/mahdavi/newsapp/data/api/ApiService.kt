@@ -1,5 +1,6 @@
 package com.mahdavi.newsapp.data.api
 
+import com.mahdavi.newsapp.data.model.remote.SourceRemote
 import com.mahdavi.newsapp.data.model.remote.news.HeadLineNews
 import com.mahdavi.newsapp.data.model.remote.news.SearchedNews
 import retrofit2.Response
@@ -20,6 +21,13 @@ interface ApiService {
         @Query("countries") countries: String = "US",
         @Query("page_size") page_size: Int
     ): Response<SearchedNews>
+
+    @GET("sources")
+    suspend fun getSources(
+        @Query("topic") topic: String,
+        @Query("lang") lang: String,
+        @Query("countries") countries: String,
+    ):Response<SourceRemote>
 }
 
 

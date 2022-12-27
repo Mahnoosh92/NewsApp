@@ -32,11 +32,7 @@ class OnBoardingChildFragment : BaseFragment() {
     private var _binding: FragmentOnBoardingChildBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: OnBoardingViewModel by hiltNavGraphViewModels(R.id.onboarding_graph)
-
-    private val exceptionHandler = CoroutineExceptionHandler { _, exception ->
-        binding.root.shortSnackBar(exception.message?:requireContext().resources.getString(R.string.error_general))
-    }
+    private var position = 0
 
     companion object {
         private const val ARG_POSITION = "ARG_POSITION"
@@ -68,13 +64,12 @@ class OnBoardingChildFragment : BaseFragment() {
     }
 
     override fun setupCollectors() {
-
+        /* NO-OP */
     }
 
     override fun setupListeners() {
-
+        /* NO-OP */
     }
-
 
     private fun getOnBoardAssetsLocation(): List<Int> {
         val onBoardAssets: MutableList<Int> = ArrayList()

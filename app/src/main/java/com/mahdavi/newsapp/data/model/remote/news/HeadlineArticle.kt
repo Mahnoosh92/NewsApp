@@ -1,6 +1,7 @@
 package com.mahdavi.newsapp.data.model.remote.news
 
 import android.os.Parcelable
+import com.mahdavi.newsapp.data.model.local.entity.FavouriteHeadLineArticleEntity
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -24,4 +25,27 @@ data class HeadlineArticle(
     val title: String?,
     val topic: String?,
     val twitterAccount: String?
-): Parcelable
+) : Parcelable {
+    fun toFavouriteHeadlineArticleEntity() = FavouriteHeadLineArticleEntity(
+        id = id,
+        score = score,
+        author = author,
+        authors = authors,
+        cleanUrl = cleanUrl,
+        country = country,
+        excerpt = excerpt,
+        isOpinion = isOpinion,
+        language = language,
+        link = link,
+        media = media,
+        publishedDate = publishedDate,
+        publishedDatePrecision = publishedDatePrecision,
+        rank = rank,
+        rights = rights,
+        summary = summary,
+        title = title,
+        topic = topic,
+        twitterAccount = twitterAccount
+    )
+
+}
