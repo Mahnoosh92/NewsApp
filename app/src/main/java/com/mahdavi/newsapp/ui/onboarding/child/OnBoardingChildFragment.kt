@@ -1,31 +1,14 @@
 package com.mahdavi.newsapp.ui.onboarding.child
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.fragment.findNavController
 import coil.load
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentOnBoardingChildBinding
 import com.mahdavi.newsapp.ui.BaseFragment
-import com.mahdavi.newsapp.ui.onboarding.OnBoardingUiState
-import com.mahdavi.newsapp.ui.onboarding.OnBoardingViewModel
-import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
-import com.mahdavi.newsapp.utils.extensions.changeNavHostGraph
-import com.mahdavi.newsapp.utils.extensions.shortSnackBar
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 
 class OnBoardingChildFragment : BaseFragment() {
 
@@ -57,7 +40,8 @@ class OnBoardingChildFragment : BaseFragment() {
         val onBoardingImages = getOnBoardAssetsLocation()
 
         with(binding) {
-            onBoardingImage.load(onBoardingImages[position])
+            onBoardingLottie.setAnimation(onBoardingImages[position])
+            (onBoardingImages[position])
             onBoardingTextTitle.text = onBoardingTitles[position]
             onBoardingTextMsg.text = onBoardingTexts[position]
         }
@@ -73,11 +57,9 @@ class OnBoardingChildFragment : BaseFragment() {
 
     private fun getOnBoardAssetsLocation(): List<Int> {
         val onBoardAssets: MutableList<Int> = ArrayList()
-        onBoardAssets.add(R.drawable.on_boarding_1)
-        onBoardAssets.add(R.drawable.on_boarding_2)
-        onBoardAssets.add(R.drawable.on_boarding_3)
+        onBoardAssets.add(R.raw.news1)
+        onBoardAssets.add(R.raw.news2)
+        onBoardAssets.add(R.raw.news3)
         return onBoardAssets
     }
-
-
 }

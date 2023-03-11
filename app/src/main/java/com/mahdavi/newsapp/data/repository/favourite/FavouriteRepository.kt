@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 interface FavouriteRepository {
 
-    fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle>?>>
+    fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>?>>
     fun updateFavouriteHeadlines(headline:HeadlineArticle): Flow<Unit>
     fun getFavouriteHeadlines(): Flow<ResultWrapper<Exception, List<HeadlineArticle>>>
 }

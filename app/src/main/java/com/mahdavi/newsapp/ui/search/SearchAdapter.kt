@@ -40,7 +40,7 @@ class NewsItemViewHolder(
                 itemArticleUiState.media
             ) {
                 crossfade(true)
-                placeholder(R.drawable.news)
+                placeholder(R.drawable.newspaper)
 
             }
             title.text = itemArticleUiState.title

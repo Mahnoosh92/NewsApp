@@ -64,13 +64,6 @@ class SplashViewModel @Inject constructor(
         }
     }
 
-
-    fun consumeIsCurrentUserSignedIn() {
-        _splashUiState.update { splashUiState ->
-            splashUiState.copy(isCurrentUserSignedIn = null)
-        }
-    }
-
     fun consumeIsOnBoardingRequired() {
         _splashUiState.update { splashUiState ->
             splashUiState.copy(isOnBoardingRequired = null)

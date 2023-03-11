@@ -25,10 +25,10 @@
         android:id="@+id/favourite_details"
         android:layout_width="@dimen/fixed_40_dp"
         android:layout_height="@dimen/fixed_40_dp"
-        android:src="@drawable/ic_baseline_favorite_24"
+        android:src="@drawable/heart_plus_filled"
         app:layout_constraintStart_toEndOf="@+id/title_details"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/title_details"
-        app:layout_constraintBottom_toBottomOf="@+id/title_details"
+        app:layout_constraintTop_toBottomOf="@+id/title_details"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="@dimen/fixed_40_dp"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

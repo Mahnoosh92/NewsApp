@@ -1,25 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+<com.google.android.material.chip.Chip xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/headline"
-    android:layout_width="wrap_content"
-    android:layout_height="@dimen/fixed_48_dp"
+    android:layout_width="@dimen/fixed_150_dp"
+    android:layout_height="@dimen/fixed_50_dp"
     android:layout_marginEnd="@dimen/margin_8"
-    app:cardBackgroundColor="@color/black_100"
-    app:cardCornerRadius="@dimen/radius_30"
-    app:cardElevation="@dimen/elevation_10">
+    android:textSize="@dimen/font_size_18"
+    android:textAlignment="center"
+    tools:text="mahnoosh" />
 
-    <!--    <com.google.android.material.chip.Chip-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"/>-->
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/headline_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:textSize="@dimen/font_size_24"
-        android:textStyle="bold"
-        tools:text="mahnoosh" />
-</com.google.android.material.card.MaterialCardView>

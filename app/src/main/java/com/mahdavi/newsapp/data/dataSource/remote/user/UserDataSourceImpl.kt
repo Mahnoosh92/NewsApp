@@ -47,6 +47,41 @@ class UserDataSourceImpl @Inject constructor() : UserDataSource {
             }
         }
     }
+
+    override suspend fun updateEmail(email: String) {
+        suspendCancellableCoroutine { continuation ->
+            auth.currentUser?.updateEmail(email)?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    continuation.resume(Unit)
+                } else {
+                    continuation.resumeWithException(
+                        task.exception ?: Exception("Something went wrong!")
+                    )
+                }
+            }
+            continuation.invokeOnCancellation {
+
+            }
+        }
+    }
+
+    override suspend fun sendEmailVerification() {
+        suspendCancellableCoroutine { continuation ->
+            auth.currentUser?.sendEmailVerification()?.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    continuation.resume(Unit)
+                } else {
+                    continuation.resumeWithException(
+                        task.exception ?: Exception("Something went wrong!")
+                    )
+                }
+            }
+            continuation.invokeOnCancellation {
+
+            }
+        }
+    }
+
     override fun signOut() = flow {
         auth.signOut()
         emit(Unit)

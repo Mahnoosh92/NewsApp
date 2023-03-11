@@ -77,6 +77,7 @@ class SearchFragment : BaseFragment(), MenuProvider {
         if (menuItem.itemId == R.id.search) {
             val searchView: SearchView = menuItem.actionView as SearchView
            viewModel.getQuery(searchView.getQueryTextChangeStateFlow())
+            binding.shimmerFrameLayout.isVisible = true
         }
         return true
     }

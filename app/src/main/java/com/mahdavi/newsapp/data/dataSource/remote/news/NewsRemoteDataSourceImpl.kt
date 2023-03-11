@@ -11,7 +11,10 @@ import javax.inject.Inject
 class NewsRemoteDataSourceImpl @Inject constructor(private val apiService: ApiService) :
     NewsRemoteDataSource {
     override fun getLatestHeadlines(topic: String) =
-        channelFlow { send(apiService.getLatestHeadlines(topic)) }
+        flow {
+            val result = apiService.getLatestHeadlines(topic)
+            emit(result)
+        }
 
     override fun searchNews(
         topic: String,

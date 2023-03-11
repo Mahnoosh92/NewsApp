@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/fixed_40_dp"
     tools:context=".ui.auth.register.RegisterFragment">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/image_back_login"
-        android:scaleType="centerCrop"
-        android:src="@drawable/img"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="250dp" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:layout_width="@dimen/fixed_300_dp"
+        android:layout_height="@dimen/fixed_300_dp"
+        android:layout_marginTop="@dimen/fixed_8_dp"
+        app:lottie_rawRes="@raw/loginsignup"
+        app:lottie_loop="true"
+        app:lottie_autoPlay="true"
+        android:layout_gravity="center"
+        />
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/margin_16"
         android:background="@null"
-        app:cardElevation="@dimen/elevation_10"
-        app:layout_constraintTop_toTopOf="@id/guideline">
+        app:cardElevation="@dimen/elevation_10">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -106,4 +103,4 @@
 <!--                app:layout_constraintTop_toBottomOf="@id/password_register" />-->
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -18,24 +18,48 @@ class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : UserRepository {
-
-    override fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>> = channelFlow {
-        userDataSource.getCurrentUser()
-            .map(FirebaseUser?::toUser)
-            .onEach {
-                send(ResultWrapper.build { it })
+    override fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>> {
+        return userDataSource.getCurrentUser()
+            .map {
+                ResultWrapper.build {
+                    it.toUser()
+                }
+            }
+            .catch {
+                ResultWrapper.build {
+                    throw java.lang.Exception(it.message)
+                }
             }
             .flowOn(ioDispatcher)
-            .catch { e ->
-                send(ResultWrapper.build { throw e })
-            }
-            .collect()
     }
 
+    //    override fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>> = channelFlow {
+//        userDataSource.getCurrentUser()
+//            .map(FirebaseUser?::toUser)
+//            .onEach {
+//                send(ResultWrapper.build { it })
+//            }
+//            .flowOn(ioDispatcher)
+//            .catch { e ->
+//                send(ResultWrapper.build { throw e })
+//            }
+//            .collect()
+//    }
     override suspend fun updateProfile(name: String?, url: Uri?) = flow {
         userDataSource.updateProfile(name, url)
         emit(Unit)
     }
+
+    override suspend fun updateEmail(email: String) = flow {
+        userDataSource.updateEmail(email)
+        emit(Unit)
+    }
+
+    override suspend fun sendEmailVerification(): Flow<Unit> = flow {
+        userDataSource.sendEmailVerification()
+        emit(Unit)
+    }
+
 
     override fun signOut() = userDataSource.signOut()
 

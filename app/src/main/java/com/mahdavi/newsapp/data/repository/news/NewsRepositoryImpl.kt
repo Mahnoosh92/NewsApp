@@ -24,40 +24,40 @@ class NewsRepositoryImpl @Inject constructor(
 ) : NewsRepository {
 
     override suspend fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>>?> =
-        flow {
-            remoteDataSource.getLatestHeadlines(topic)
-                .map { response ->
-                    if (!response.isSuccessful) {
-                        throw Exception(response.getApiError()?.message)
+        //   flow {
+        remoteDataSource.getLatestHeadlines(topic)
+            .map { response ->
+                if (!response.isSuccessful) {
+                    throw Exception(response.getApiError()?.message)
+                }
+                response.body()?.articles
+            }
+            .flatMapConcat { articleResponse ->
+                clearHeadlines().collect()
+                articleResponse?.let {
+                    updateHeadlines(it.filterNotNull()
+                        .map { articleResponse ->
+                            articleResponse.toHeadlineArticleEntity()
+                        })
+                } ?: flowOf(Unit)
+            }
+            .flatMapConcat {
+                localDataSource.getHeadlines()
+            }
+            .map {
+                ResultWrapper.build {
+                    it.map { article ->
+                        article.toHeadlineArticle()
                     }
-                    response.body()?.articles
                 }
-                .flatMapConcat { articleResponse ->
-                    clearHeadlines().collect()
-                    articleResponse?.let {
-                        updateHeadlines(it.filterNotNull()
-                            .map { articleResponse ->
-                                articleResponse.toHeadlineArticleEntity()
-                            })
-                    } ?: flowOf(Unit)
+            }
+            .flowOn(ioDispatcher)
+            .catch { error ->
+//
+                ResultWrapper.build {
+                    throw error
                 }
-                .flatMapConcat {
-                    localDataSource.getHeadlines()
-                }
-                .flowOn(ioDispatcher)
-                .catch { error ->
-                    emit(ResultWrapper.build {
-                        throw error
-                    })
-                }
-                .collect {
-                    emit(ResultWrapper.build {
-                        it.map { article ->
-                            article.toHeadlineArticle()
-                        }
-                    })
-                }
-        }
+            }
 
     override fun searchNews(
         topic: String,

@@ -13,32 +13,55 @@ class SourceRepositoryImpl @Inject constructor(
     private val sourceRemoteDataSource: SourceRemoteDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : SourceRepository {
+    //    override fun getSources(
+//        topic: String,
+//        lang: String,
+//        countries: String
+//    ): Flow<ResultWrapper<Exception, SourceRemote?>> = flow {
+//        sourceRemoteDataSource.getSources(topic = topic, lang = lang, countries = countries)
+//            .map { response ->
+//                if (response.isSuccessful) {
+//                    emit(ResultWrapper.build { response.body() })
+//                } else {
+//                    emit(ResultWrapper.build {
+//                        throw Exception(
+//                            response.getApiError()?.message ?: "Something went wrong!"
+//                        )
+//                    })
+//                }
+//            }
+//            .catch { error ->
+//                emit(ResultWrapper.build {
+//                    throw Exception(
+//                        error.message ?: "Something went wrong!"
+//                    )
+//                })
+//            }
+//            .flowOn(ioDispatcher)
+//            .collect()
+//    }
     override fun getSources(
         topic: String,
         lang: String,
         countries: String
-    ): Flow<ResultWrapper<Exception, SourceRemote?>> = flow {
-        sourceRemoteDataSource.getSources(topic = topic, lang = lang, countries = countries)
+    ): Flow<ResultWrapper<Exception, SourceRemote?>> {
+        return sourceRemoteDataSource.getSources(topic = topic, lang = lang, countries = countries)
             .map { response ->
                 if (response.isSuccessful) {
-                    emit(ResultWrapper.build { response.body() })
+                    ResultWrapper.build {
+                        response.body()
+                    }
                 } else {
-                    emit(ResultWrapper.build {
-                        throw Exception(
-                            response.getApiError()?.message ?: "Something went wrong!"
-                        )
-                    })
+                    ResultWrapper.build {
+                        throw java.lang.Exception(response.getApiError()?.message)
+                    }
                 }
             }
-            .catch { error ->
-                emit(ResultWrapper.build {
-                    throw Exception(
-                        error.message ?: "Something went wrong!"
-                    )
-                })
+            .catch {
+                ResultWrapper.build {
+                    throw java.lang.Exception(it.message)
+                }
             }
-            .flowOn(ioDispatcher)
-            .collect()
     }
 
 }

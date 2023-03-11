@@ -24,6 +24,7 @@ import com.mahdavi.newsapp.databinding.FragmentProfileBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.ui.profile.bottom_sheet.ProfileBottomSheetFragment
 import com.mahdavi.newsapp.utils.extensions.shortSnackBar
+import com.mahdavi.newsapp.utils.widgets.ProgressButtonCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.launchIn
@@ -66,8 +67,19 @@ class ProfileFragment : BaseFragment() {
                                 loading.isVisible = false
                                 userPhotoUri.isVisible = true
                             }
-                            binding.root.shortSnackBar("Photo Updated successfully")
+                            binding.submitButton.setLoading(false)
+                            binding.root.shortSnackBar("Updated successfully")
                         }
+                    }
+                    isEmailUpdatedSuccessfully?.let {
+                        if (it) {
+                            binding.submitButton.setLoading(false)
+                            binding.root.shortSnackBar("Email Updated successfully")
+                        }
+                    }
+                    emailError?.let {
+                        binding.root.shortSnackBar(it)
+                        binding.submitButton.setLoading(false)
                     }
                     user?.let {
                         binding.apply {
@@ -81,6 +93,7 @@ class ProfileFragment : BaseFragment() {
                     }
                     error?.let {
                         binding.root.shortSnackBar(this.error)
+                        binding.submitButton.setLoading(false)
                     }
                 }
             }.launchIn(viewLifecycleOwner.lifecycleScope)
@@ -91,9 +104,18 @@ class ProfileFragment : BaseFragment() {
             profileCamera.setOnClickListener {
                 findNavController().navigate(ProfileFragmentDirections.actionProfileFragmentToProfileBottomSheetFragment())
             }
-            submitButton.setOnClickListener {
+            submitButton.onClick(object : ProgressButtonCallback {
+                override fun onClick() {
+                    submitButton.setLoading(true)
+                    if (!userDisplayName.text.toString().isNullOrEmpty()) {
+                        viewModel.updateProfileInformation(name = userDisplayName.text.toString(), null)
+                    }
+                    if(!userEmail.text.toString().isNullOrEmpty()) {
+                        viewModel.updateEmailAddress(email = userEmail.text.toString())
+                    }
 
-            }
+                }
+            })
         }
     }
 }

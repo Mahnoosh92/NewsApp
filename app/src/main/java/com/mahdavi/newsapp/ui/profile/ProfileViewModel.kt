@@ -65,6 +65,22 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
+    fun updateEmailAddress(email: String) {
+        viewModelScope.launch {
+            userRepository.updateEmail(email)
+                .catch { error ->
+                    _profileUiState.update { profileUiState ->
+                        profileUiState.copy(emailError = error.message)
+                    }
+                }
+                .collect {
+                    _profileUiState.update { profileUiState ->
+                        profileUiState.copy(isEmailUpdatedSuccessfully = true)
+                    }
+                }
+        }
+    }
+
     fun updateProfileInformation(name: String?, uri: Uri?) {
         viewModelScope.launch(exceptionHandler) {
             userRepository.updateProfile(name, uri)
@@ -83,6 +99,11 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
                 .collect {
+                    name?.let {
+                        _profileUiState.update { profileUiState ->
+                            profileUiState.copy(user = profileUiState.user?.copy(displayName = name))
+                        }
+                    }
                     _profileUiState.update { profileUiState ->
                         profileUiState.copy(isUpdatedSuccessfully = true)
                     }
@@ -107,6 +128,8 @@ class ProfileViewModel @Inject constructor(
 data class ProfileUiState(
     val user: User? = null,
     val error: String? = null,
+    val emailError: String? = null,
+    val isEmailUpdatedSuccessfully: Boolean? = null,
     val isUpdatedSuccessfully: Boolean? = null,
     val isLoadingPhotoUri: Boolean? = null
 )

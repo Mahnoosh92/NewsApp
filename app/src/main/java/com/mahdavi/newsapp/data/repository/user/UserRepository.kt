@@ -11,5 +11,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserRepository {
     fun getCurrentUser(): Flow<ResultWrapper<Exception, User?>>
     suspend fun updateProfile(name: String?, url: Uri?): Flow<Unit>
+    suspend fun updateEmail(email: String): Flow<Unit>
+    suspend fun sendEmailVerification(): Flow<Unit>
     fun signOut(): Flow<Unit>
 }

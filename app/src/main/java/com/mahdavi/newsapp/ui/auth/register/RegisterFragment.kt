@@ -1,23 +1,18 @@
 package com.mahdavi.newsapp.ui.auth.register
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.activityViewModels
+import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.textfield.TextInputLayout
 import com.mahdavi.newsapp.R
-import com.mahdavi.newsapp.databinding.FragmentLoginBinding
 import com.mahdavi.newsapp.databinding.FragmentRegisterBinding
 import com.mahdavi.newsapp.ui.BaseFragment
-import com.mahdavi.newsapp.ui.auth.login.LoginViewModel
-import com.mahdavi.newsapp.utils.extensions.action
+import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
 import com.mahdavi.newsapp.utils.extensions.getQueryTextStateFlow
 import com.mahdavi.newsapp.utils.extensions.setStrockColor
 import com.mahdavi.newsapp.utils.extensions.shortSnackBar
@@ -43,7 +38,7 @@ class RegisterFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-
+        /*NO_OP*/
     }
 
     override fun setupCollectors() {
@@ -74,7 +69,8 @@ class RegisterFragment : BaseFragment() {
                     registrationUiState.registerResult?.let { registerResult ->
                         if (registerResult.isRegistered == true) {
                             binding.root.shortSnackBar(getString(R.string.successful_registration))
-                            findNavController().navigateUp()
+                            findNavController().popBackStack(R.id.loginFragment, true)
+                            findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
                         } else {
                             binding.root.shortSnackBar(
                                 registerResult.errorMessage ?: getString(R.string.error_general)
@@ -95,7 +91,7 @@ class RegisterFragment : BaseFragment() {
                     password.getQueryTextStateFlow()
                 )
             }
-            registerButton.onClick(object: ProgressButtonCallback{
+            registerButton.onClick(object : ProgressButtonCallback {
                 override fun onClick() {
                     registerButton.setLoading(true)
                     viewModel.registerUser(username.text.toString(), password.text.toString())

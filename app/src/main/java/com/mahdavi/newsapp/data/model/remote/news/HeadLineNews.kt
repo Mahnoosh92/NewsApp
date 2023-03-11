@@ -10,5 +10,5 @@ data class HeadLineNews(
     @SerializedName("status") val status: String?,
     @SerializedName("total_hits") val totalHits: Int?,
     @SerializedName("total_pages") val totalPages: Int?,
-    @SerializedName("user_input") val userInput: UserInput?
+    //@SerializedName("user_input") val userInput: UserInput?
 )

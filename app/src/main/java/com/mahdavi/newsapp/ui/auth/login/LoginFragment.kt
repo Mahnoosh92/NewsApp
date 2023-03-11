@@ -5,19 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentLoginBinding
 import com.mahdavi.newsapp.ui.BaseFragment
-import com.mahdavi.newsapp.ui.MainActivity
 import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
-import com.mahdavi.newsapp.utils.extensions.*
 import com.mahdavi.newsapp.utils.extensions.action
+import com.mahdavi.newsapp.utils.extensions.getQueryTextStateFlow
+import com.mahdavi.newsapp.utils.extensions.setStrockColor
 import com.mahdavi.newsapp.utils.extensions.shortSnackBar
 import com.mahdavi.newsapp.utils.widgets.ProgressButtonCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +27,7 @@ class LoginFragment : BaseFragment() {
 
     private lateinit var binding: FragmentLoginBinding
 
-    private val viewModel: LoginViewModel by activityViewModels()
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -39,7 +37,7 @@ class LoginFragment : BaseFragment() {
     }
 
     override fun setupUi() {
-
+        /*NO_OP*/
     }
 
     override fun setupCollectors() {
@@ -98,6 +96,7 @@ class LoginFragment : BaseFragment() {
 
             loginButton.onClick(object : ProgressButtonCallback {
                 override fun onClick() {
+//                    viewModel.triggerNotification(title = R.string.notification_title, message = R.string.notification_message, R.drawable.ic_baseline_notifications_24)
                     loginButton.setLoading(true)
                     viewModel.login(username.text.toString(), password.text.toString())
                 }
@@ -110,7 +109,8 @@ class LoginFragment : BaseFragment() {
     }
 
     private fun navigateToHome() {
-        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
+//        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
+        findNavController().popBackStack(R.id.loginFragment, true)
         findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
     }
 }

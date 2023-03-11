@@ -13,20 +13,22 @@
         android:name="com.mahdavi.newsapp.ui.headlines.HeadlineFragment"
         android:label=""
         tools:layout="@layout/fragment_headline">
-
         <deepLink
             android:id="@+id/deepLinkNavTabs"
             app:uri="myapp://tabs" />
+        <deepLink
+            android:id="@+id/deepLinkNavTab"
+            app:uri="https://newsapp-e5ae0.firebaseapp.com/__/auth/action?mode={action}&amp;oobCode={code}" />
     </fragment>
 
     <fragment
         android:id="@+id/favoriteFragment"
         android:name="com.mahdavi.newsapp.ui.favorite.FavoriteFragment"
         android:label="FavoriteFragment"
-        tools:layout="@layout/fragment_favorite" >
+        tools:layout="@layout/fragment_favorite">
         <action
             android:id="@+id/action_favoriteFragment_to_details_graph"
-            app:destination="@id/details_graph" >
+            app:destination="@id/details_graph">
             <argument
                 android:name="headline"
                 app:argType="com.mahdavi.newsapp.data.model.remote.news.HeadlineArticle" />
@@ -38,7 +40,6 @@
         android:name="com.mahdavi.newsapp.ui.settings.SettingFragment"
         android:label="SettingFragment"
         tools:layout="@layout/fragment_settings">
-
         <action
             android:id="@+id/action_settingFragment_to_setting_graph"
             app:destination="@id/setting_graph" />
@@ -49,6 +50,4 @@
         android:name="com.mahdavi.newsapp.ui.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
-
-
 </navigation>

@@ -1,5 +1,6 @@
 package com.mahdavi.newsapp.ui.onboarding
 
+import android.graphics.PorterDuff
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,16 +16,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.tabs.TabLayoutMediator
 import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentOnBoardingBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.ui.onboarding.adapter.OnBoardingFragmentStateAdapter
 import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
-import com.mahdavi.newsapp.utils.extensions.changeNavHostGraph
 import com.mahdavi.newsapp.utils.extensions.shortSnackBar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import me.relex.circleindicator.CircleIndicator
 
 
 private const val NUM_PAGES = 3
@@ -62,6 +64,9 @@ class OnBoardingFragment : BaseFragment() {
             adapter = onBoardingAdapter
             registerOnPageChangeCallback(onBoardingPageChangeCallback)
         }
+        TabLayoutMediator(binding.intoTabLayout, binding.vp2Pager)
+        { tab, position ->}.attach()
+
     }
 
     override fun setupCollectors() {
@@ -91,27 +96,12 @@ class OnBoardingFragment : BaseFragment() {
 
 
     private fun updateCircleMarker(position: Int) {
-        when (position) {
-            0 -> {
-                binding.ivFirstCircle.setColorFilter(R.color.red_500)
-                binding.ivSecondCircle.setColorFilter(R.color.black)
-                binding.ivThirdCircle.setColorFilter(R.color.black)
-            }
-            1 -> {
-                binding.ivFirstCircle.setColorFilter(R.color.black)
-                binding.ivSecondCircle.setColorFilter(R.color.red_500)
-                binding.ivThirdCircle.setColorFilter(R.color.black)
-            }
-            2 -> {
-                binding.ivFirstCircle.setColorFilter(R.color.black)
-                binding.ivSecondCircle.setColorFilter(R.color.black)
-                binding.ivThirdCircle.setColorFilter(R.color.red_500)
-            }
-        }
+
     }
 
     private fun navigateToLogin() {
-        activity?.changeNavHostGraph(R.navigation.auth_graph, R.id.loginFragment)
+        //activity?.changeNavHostGraph(R.navigation.auth_graph, R.id.loginFragment)
+        findNavController().popBackStack(R.id.onBoardingFragment, true)
         findNavController().navigate(InternalDeepLinkHandler.LOGIN.toUri())
     }
 

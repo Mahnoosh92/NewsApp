@@ -21,6 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
     private val validator: Validate,
     @DefaultDispatcher private val defaultDispatcher: CoroutineDispatcher,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
@@ -67,7 +68,8 @@ class RegisterViewModel @Inject constructor(
 
     fun registerUser(email: String, password: String) {
         viewModelScope.launch(exceptionHandler) {
-            val user = authRepository.createUserWithEmailAndPassword(email, password).user
+            authRepository.createUserWithEmailAndPassword(email, password)
+            userRepository.sendEmailVerification().collect()
             _registrationUiState.update { registerUiState ->
                 registerUiState.copy(registerResult = RegisterResult(true, null))
             }

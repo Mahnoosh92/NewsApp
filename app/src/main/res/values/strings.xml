@@ -62,4 +62,11 @@
         <item>Text2</item>
         <item>Text3</item>
     </string-array>
+    <!-- notification -->
+    <string name="notification_channel_id" translatable="false">channel_id</string>
+    <string name="notification_channel_id_firebase" translatable="false">channel_id_firebase</string>
+    <string name="notification_channel_name" translatable="false">channel_name</string>
+    <string name="notification_channel_name_firebase" translatable="false">channel_name_firebase</string>
+    <string name="notification_title" translatable="false">notification title</string>
+    <string name="notification_message" translatable="false">notification message</string>
 </resources>

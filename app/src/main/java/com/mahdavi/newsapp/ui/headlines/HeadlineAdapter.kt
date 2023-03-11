@@ -12,7 +12,6 @@ import com.mahdavi.newsapp.data.model.remote.news.HeadlineArticle
 import com.mahdavi.newsapp.databinding.ItemNewsBinding
 
 class HeadlineAdapter : ListAdapter<HeadlineArticle, RecyclerView.ViewHolder>(Callback()) {
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val binding =
             ItemNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -33,15 +32,13 @@ class NewsItemViewHolder(
         itemArticleUiState
         : HeadlineArticle
     ) {
-
-
         binding.apply {
             //TODO:placeholder and error and loader for coil
             imageId.load(
                 itemArticleUiState.media
             ) {
                 crossfade(true)
-                placeholder(R.drawable.news)
+                placeholder(R.drawable.newspaper)
 
             }
             title.text = itemArticleUiState.title

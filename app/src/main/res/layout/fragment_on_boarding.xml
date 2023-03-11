@@ -19,6 +19,7 @@
 
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp2_pager"
+            android:layout_gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </FrameLayout>
@@ -35,26 +36,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/fl_slider">
 
-        <ImageView
-            android:id="@+id/iv_first_circle"
-            android:layout_width="wrap_content"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/into_tab_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_8"
-            android:src="@drawable/ic_circle_24" />
+            app:tabBackground="@drawable/tab_pager_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            android:layout_gravity="bottom"/>
 
-        <ImageView
-            android:id="@+id/iv_second_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_8"
-            android:src="@drawable/ic_circle_24" />
-
-        <ImageView
-            android:id="@+id/iv_third_circle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_8"
-            android:src="@drawable/ic_circle_24" />
     </LinearLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -67,7 +57,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginBottom="@dimen/margin_16"
-        android:backgroundTint="@color/blue_500"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

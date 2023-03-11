@@ -1,10 +1,20 @@
 package com.mahdavi.newsapp.ui.auth.login
 
+import android.app.NotificationManager
+import android.content.res.Resources
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
+import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.data.repository.auth.AuthRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.di.IoDispatcher
 import com.mahdavi.newsapp.ui.auth.register.RegisterResult
+import com.mahdavi.newsapp.utils.providers.drawable.DrawableProvider
+import com.mahdavi.newsapp.utils.providers.string.StringProvider
 import com.mahdavi.newsapp.utils.validate.Validate
 import com.mahdavi.newsapp.utils.validate.ValidateResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,10 +26,11 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
+const val NOTIFICATION_ID = 1000
+
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
     private val validator: Validate
 ) : ViewModel() {
 

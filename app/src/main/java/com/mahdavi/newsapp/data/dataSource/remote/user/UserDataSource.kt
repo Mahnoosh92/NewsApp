@@ -9,5 +9,7 @@ import kotlinx.coroutines.flow.Flow
 interface UserDataSource {
     fun getCurrentUser(): Flow<FirebaseUser?>
     suspend fun updateProfile(name: String?, url: Uri?): Unit
+    suspend fun updateEmail(email: String): Unit
+    suspend fun sendEmailVerification(): Unit
     fun signOut(): Flow<Unit>
 }

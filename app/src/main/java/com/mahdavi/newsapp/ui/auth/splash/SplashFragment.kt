@@ -3,13 +3,11 @@ package com.mahdavi.newsapp.ui.auth.splash
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -17,13 +15,9 @@ import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.databinding.FragmentSplashBinding
 import com.mahdavi.newsapp.ui.BaseFragment
 import com.mahdavi.newsapp.utils.InternalDeepLinkHandler
-import com.mahdavi.newsapp.utils.extensions.changeNavHostGraph
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
@@ -57,7 +51,7 @@ class SplashFragment : BaseFragment() {
                                 viewModel.signOut()
                             }
                         }
-                        viewLifecycleOwner.lifecycleScope.launch {
+                        lifecycleScope.launch {
                             delay(300L)
                             viewModel.consumeIsOnBoardingRequired()
                             navigateToOnBoarding()
@@ -70,7 +64,7 @@ class SplashFragment : BaseFragment() {
                                 )
 
                             } else {
-                                viewLifecycleOwner.lifecycleScope.launch {
+                                lifecycleScope.launch {
                                     delay(300L)
                                     findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToLoginFragment())
                                 }
@@ -78,20 +72,23 @@ class SplashFragment : BaseFragment() {
                         }
                     }
                 }
-            }.launchIn(viewLifecycleOwner.lifecycleScope)
+            }
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun setupListeners() {
-
+        /*NO_OP*/
     }
 
     private fun navigateToHome() {
-        activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
+        //activity?.changeNavHostGraph(R.navigation.tabs_graph, R.id.headlineFragment)
+        findNavController().popBackStack(R.id.splashFragment, true)
         findNavController().navigate(InternalDeepLinkHandler.TABS.toUri())
     }
 
     private fun navigateToOnBoarding() {
-        activity?.changeNavHostGraph(R.navigation.onboarding_graph, R.id.onBoardingFragment)
+        //activity?.changeNavHostGraph(R.navigation.onboarding_graph, R.id.onBoardingFragment)
+        findNavController().popBackStack(R.id.splashFragment, true)
         findNavController().navigate(InternalDeepLinkHandler.ONBOARDING.toUri())
     }
 

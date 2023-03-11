@@ -9,8 +9,7 @@
         android:id="@+id/onBoardingFragment"
         android:name="com.mahdavi.newsapp.ui.onboarding.OnBoardingFragment"
         android:label="OnBoardingFragment"
-        tools:layout="@layout/fragment_on_boarding"
-        >
+        tools:layout="@layout/fragment_on_boarding">
         <deepLink
             android:id="@+id/deepLinkNavOnBoarding"
             app:uri="myapp://on_boarding" />

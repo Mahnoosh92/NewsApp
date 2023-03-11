@@ -27,7 +27,7 @@ class HeadlineViewModel @Inject constructor(
     }
 
     fun getHeadlinesForFirstTitle() {
-        viewModelScope.launch {
+        viewModelScope.launch(exceptionHandler) {
             newsRepository.getHeadlinesTitle()
                 .map { titles ->
                     _articles.update {
@@ -35,8 +35,13 @@ class HeadlineViewModel @Inject constructor(
                     }
                     titles
                 }
-                .flatMapLatest { list ->
+                .flatMapConcat { list ->
                     newsRepository.getLatestHeadlines(list.filter { it.isSelected }[0].title)
+                }
+                .catch { error ->
+                    _articles.update { headlineUiState ->
+                        headlineUiState.copy(error = error.message)
+                    }
                 }
                 .collect { result ->
                     when (result) {
@@ -58,10 +63,10 @@ class HeadlineViewModel @Inject constructor(
         }
     }
 
-    fun updateListTitles(headlineTitle: HeadlineTitle) {
+    fun updateListTitles(headlineTitle: String) {
         _articles.update { headlineUiState ->
             val titles = headlineUiState.titles?.map { headlineT ->
-                if (headlineT.title == headlineTitle.title) {
+                if (headlineT.title == headlineTitle) {
                     headlineT.copy(isSelected = true)
                 } else {
                     headlineT.copy(isSelected = false)
@@ -71,9 +76,9 @@ class HeadlineViewModel @Inject constructor(
         }
     }
 
-    fun getLatestHeadLines(headlineTitle: HeadlineTitle) {
+    fun getLatestHeadLines(headlineTitle: String) {
         viewModelScope.launch(exceptionHandler) {
-            newsRepository.getLatestHeadlines(headlineTitle.title)
+            newsRepository.getLatestHeadlines(headlineTitle)
                 .map { result ->
                     when (result) {
                         is ResultWrapper.Value -> {

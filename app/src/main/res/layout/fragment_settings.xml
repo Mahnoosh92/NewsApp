@@ -61,15 +61,28 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.mahdavi.newsapp.utils.widgets.CardView
-            android:id="@+id/profile_card_view"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_margin="16dp"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="@dimen/margin_8"
-            app:cv_icon="@drawable/ic_account"
-            app:cv_text="profile" />
-
+            android:orientation="vertical"
+            >
+            <com.mahdavi.newsapp.utils.widgets.CardView
+                android:id="@+id/profile_card_view"
+                android:layout_width="match_parent"
+                android:layout_margin="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_8"
+                app:cv_icon="@drawable/ic_account"
+                app:cv_text="profile" />
+            <com.mahdavi.newsapp.utils.widgets.CardView
+                android:id="@+id/profile_sign_out"
+                android:layout_width="match_parent"
+                android:layout_margin="16dp"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="@dimen/margin_8"
+                app:cv_icon="@drawable/ic_baseline_exit_to_app_24"
+                app:cv_text="sign-out" />
+        </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

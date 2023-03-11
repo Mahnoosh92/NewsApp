@@ -1,6 +1,12 @@
 package com.mahdavi.newsapp.di
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.graphics.Color
+import android.os.Build
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
@@ -11,6 +17,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.preferencesDataStoreFile
 import androidx.room.Room
 import com.mahdavi.newsapp.BuildConfig
+import com.mahdavi.newsapp.R
 import com.mahdavi.newsapp.UserPreferences
 import com.mahdavi.newsapp.data.api.ApiService
 import com.mahdavi.newsapp.data.dataSource.local.datastore.UserPreferencesSerializer
@@ -43,6 +50,10 @@ import com.mahdavi.newsapp.data.repository.source.SourceRepository
 import com.mahdavi.newsapp.data.repository.source.SourceRepositoryImpl
 import com.mahdavi.newsapp.data.repository.user.UserRepository
 import com.mahdavi.newsapp.data.repository.user.UserRepositoryImpl
+import com.mahdavi.newsapp.utils.providers.drawable.DrawableProvider
+import com.mahdavi.newsapp.utils.providers.drawable.DrawableProviderImpl
+import com.mahdavi.newsapp.utils.providers.string.StringProvider
+import com.mahdavi.newsapp.utils.providers.string.StringProviderImpl
 import com.mahdavi.newsapp.utils.validate.Validate
 import com.mahdavi.newsapp.utils.validate.ValidateImpl
 import dagger.Binds
@@ -51,6 +62,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -181,10 +193,44 @@ object CoroutinesDispatchersModule {
     fun providesMainImmediateDispatcher(): CoroutineDispatcher = Dispatchers.Main.immediate
 }
 
-//////////////////////////////////////////////
-//bindings
 @Module
 @InstallIn(SingletonComponent::class)
+object NotificationModule {
+
+    @Singleton
+    @Provides
+    fun provideNotificationBuilder(
+        @ApplicationContext context: Context
+    ): NotificationCompat.Builder {
+        return NotificationCompat.Builder(
+            context,
+            R.string.notification_channel_id_firebase.toString()
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideNotificationManager(
+        @ApplicationContext context: Context
+    ): NotificationManagerCompat {
+        val notificationManager = NotificationManagerCompat.from(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(
+                R.string.notification_channel_id_firebase.toString(),
+                R.string.notification_channel_name_firebase.toString(),
+                NotificationManager.IMPORTANCE_HIGH
+            )
+            channel.enableLights(true)
+            channel.lightColor = Color.RED
+            channel.enableVibration(true)
+            notificationManager.createNotificationChannel(channel)
+        }
+        return notificationManager
+    }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
 abstract class DataSourceModule {
 
     @Binds
@@ -197,7 +243,7 @@ abstract class DataSourceModule {
         newsRemoteDataSourceImpl: NewsRemoteDataSourceImpl
     ): NewsRemoteDataSource
 
-    @Singleton
+    @ViewModelScoped
     @Binds
     abstract fun bindUserDataSource(
         userDataSourceImpl: UserDataSourceImpl
@@ -225,7 +271,7 @@ abstract class DataSourceModule {
 }
 
 @Module
-@InstallIn(SingletonComponent::class)
+@InstallIn(ViewModelComponent::class)
 abstract class RepositoryModule {
 
     @Binds
@@ -234,7 +280,7 @@ abstract class RepositoryModule {
     ): NewsRepository
 
     @Binds
-    @Singleton
+    @ViewModelScoped
     abstract fun bindUserRepository(
         userRepositoryImpl: UserRepositoryImpl
     ): UserRepository
@@ -272,17 +318,27 @@ abstract class SharedPreferencesModule {
 }
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class UtilsModule {
 
     @Binds
     abstract fun bindValidator(
         validateImpl: ValidateImpl
     ): Validate
+
+    @Singleton
+    @Binds
+    abstract fun bindStringProvider(
+        stringProviderImpl: StringProviderImpl
+    ): StringProvider
+
+    @Singleton
+    @Binds
+    abstract fun bindDrawableProvider(
+        drawableProviderImpl: DrawableProviderImpl
+    ): DrawableProvider
 }
 
-/////////////////////////////////////////////
-//Qualifiers
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
 annotation class DefaultDispatcher

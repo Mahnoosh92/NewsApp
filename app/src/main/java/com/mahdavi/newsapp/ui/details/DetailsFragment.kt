@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.fragment.hiltNavGraphViewModels
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -17,7 +18,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DetailsFragment : BaseFragment() {
 
-    private var _binding:FragmentDetailsBinding?=null
+    private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: FavoriteViewModel by hiltNavGraphViewModels(R.id.tabs_graph)
@@ -32,12 +33,18 @@ class DetailsFragment : BaseFragment() {
     }
 
     override fun setupCollectors() {
-
+        /*NO_OP*/
     }
 
     override fun setupListeners() {
-        binding.favouriteDetails.setOnClickListener{
+        binding.favouriteDetails.setOnClickListener {
             viewModel.addToFavouriteHeadlines(args.headline)
+            binding.favouriteDetails.setColorFilter(
+                ContextCompat.getColor(
+                    binding.root.context,
+                    R.color.queen
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            );
         }
     }
 

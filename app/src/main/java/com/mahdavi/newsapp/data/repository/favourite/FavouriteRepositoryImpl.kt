@@ -17,35 +17,75 @@ class FavouriteRepositoryImpl @Inject constructor(
     private val newsRemoteDataSource: NewsRemoteDataSource,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher
 ) : FavouriteRepository {
-    override fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle>?>> =
-        flow {
-            newsRemoteDataSource.getLatestHeadlines(topic)
-                .map { response ->
-                    if (response.isSuccessful) {
-                        emit(ResultWrapper.build {
-                            response.body()?.articles?.filterNotNull()
-                                ?.map(RemoteHeadlineArticle::toHeadlineArticle)
-                        })
-                    } else {
-                        ResultWrapper.build { throw Exception(response.getApiError()?.message) }
+    override fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle?>?>> {
+        return newsRemoteDataSource.getLatestHeadlines(topic = topic)
+            .map { response ->
+                if (response.isSuccessful) {
+                    ResultWrapper.build {
+                        response.body()?.articles?.map {
+                            it?.toHeadlineArticle()
+                        }
+                    }
+                } else {
+                    ResultWrapper.build {
+                        throw Exception(response.getApiError()?.message)
                     }
                 }
-                .catch { error -> ResultWrapper.build { throw Exception(error.message) } }
-                .collect()
-        }
+
+            }
+            .catch {
+                ResultWrapper.build {
+                    throw Exception(it.message)
+                }
+            }
+            .flowOn(ioDispatcher)
+    }
+
+//    override fun getLatestHeadlines(topic: String): Flow<ResultWrapper<Exception, List<HeadlineArticle>?>> =
+//        flow {
+//            newsRemoteDataSource.getLatestHeadlines(topic)
+//                .map { response ->
+//                    if (response.isSuccessful) {
+//                        emit(ResultWrapper.build {
+//                            response.body()?.articles?.filterNotNull()
+//                                ?.map(RemoteHeadlineArticle::toHeadlineArticle)
+//                        })
+//                    } else {
+//                        ResultWrapper.build { throw Exception(response.getApiError()?.message) }
+//                    }
+//                }
+//                .catch { error -> ResultWrapper.build { throw Exception(error.message) } }
+//                .collect()
+//        }
 
     override fun updateFavouriteHeadlines(headline: HeadlineArticle) =
         favouriteLocalDataSource.updateFavouriteHeadlines(headline.toFavouriteHeadlineArticleEntity())
 
-    override fun getFavouriteHeadlines(): Flow<ResultWrapper<Exception, List<HeadlineArticle>>> =
-        flow {
-            favouriteLocalDataSource.getFavouriteHeadlines()
-                .map { list ->
-                    emit(ResultWrapper.build {
-                        list.filterNotNull().map(FavouriteHeadLineArticleEntity::toHeadlineArticle)
-                    })
+    override fun getFavouriteHeadlines(): Flow<ResultWrapper<Exception, List<HeadlineArticle>>> {
+        return favouriteLocalDataSource.getFavouriteHeadlines()
+            .map {
+                ResultWrapper.build {
+                    it.map { entity ->
+                        entity.toHeadlineArticle()
+                    }
                 }
-                .catch { error -> emit(ResultWrapper.build { throw error }) }
-                .collect()
-        }
+            }
+            .catch {
+                ResultWrapper.build {
+                    throw Exception(it.message)
+                }
+            }
+    }
+
+//    override fun getFavouriteHeadlines(): Flow<ResultWrapper<Exception, List<HeadlineArticle>>> =
+//        flow {
+//            favouriteLocalDataSource.getFavouriteHeadlines()
+//                .map { list ->
+//                    emit(ResultWrapper.build {
+//                        list.filterNotNull().map(FavouriteHeadLineArticleEntity::toHeadlineArticle)
+//                    })
+//                }
+//                .catch { error -> emit(ResultWrapper.build { throw error }) }
+//                .collect()
+//        }
 }

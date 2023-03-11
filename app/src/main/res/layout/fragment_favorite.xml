@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/purple_200">
+    android:layout_height="match_parent">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -16,6 +15,7 @@
         app:tabMinWidth="@dimen/fixed_130_dp"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/red_500"
+        app:tabTextAppearance="@style/font_template"
         app:tabTextColor="@color/black_500">
 
         <com.google.android.material.tabs.TabItem

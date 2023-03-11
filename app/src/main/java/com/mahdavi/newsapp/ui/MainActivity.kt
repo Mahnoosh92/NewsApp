@@ -1,6 +1,7 @@
 package com.mahdavi.newsapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.postDelayed
@@ -13,10 +14,12 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.mahdavi.newsapp.R
+import com.mahdavi.newsapp.data.dataSource.local.pref.SharedPreferenceDataSource
 import com.mahdavi.newsapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -44,6 +47,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.searchFragment,
                 R.id.favoriteFragment,
                 R.id.settingFragment,
+                R.id.loginFragment,
+                R.id.registerFragment,
                 R.id.onBoardingFragment
             )
         )
@@ -54,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupUiListener() {
         setupNav()
+
     }
 
     private fun setupNav() {
@@ -65,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         }
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.splashFragment, R.id.loginFragment , R.id.settingFragment, R.id.onBoardingFragment-> hideAppbar()
+                R.id.splashFragment, R.id.loginFragment , R.id.registerFragment, R.id.headlineFragment , R.id.settingFragment, R.id.onBoardingFragment-> hideAppbar()
                 else -> showAppbar()
             }
         }

@@ -8,10 +8,11 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="@dimen/fixed_300_dp"
+        android:layout_height="@dimen/fixed_300_dp"
         app:lottie_autoPlay="true"
-        app:lottie_loop="true"
         app:lottie_colorFilter="@color/black_200"
-        app:lottie_rawRes="@raw/loading" />
+        app:lottie_loop="true"
+        android:layout_gravity="center"
+        app:lottie_rawRes="@raw/news" />
 </FrameLayout>

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.gson.annotations.SerializedName
 import com.mahdavi.newsapp.data.model.local.ResultWrapper
 import com.mahdavi.newsapp.data.model.remote.news.HeadlineArticle
 import com.mahdavi.newsapp.data.repository.favourite.FavouriteRepository
@@ -80,7 +81,7 @@ class FavoriteViewModel @Inject constructor(private val favouriteRepository: Fav
 }
 
 data class FavoriteUiState(
-    val headlines: List<HeadlineArticle>? = null,
+    val headlines: List<HeadlineArticle?>? = null,
     val favouriteHeadLines: List<HeadlineArticle>? = null,
     val error: String? = null
 )

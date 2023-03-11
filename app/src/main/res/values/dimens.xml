@@ -49,6 +49,9 @@
     <dimen name="padding_30">30dp</dimen>
 
     <!-- fixed -->
+    <dimen name="fixed_8_dp">10dp</dimen>
+    <dimen name="fixed_10_dp">10dp</dimen>
+    <dimen name="fixed_20_dp">20dp</dimen>
     <dimen name="fixed_40_dp">40dp</dimen>
     <dimen name="fixed_48_dp">48dp</dimen>
     <dimen name="fixed_50_dp">50dp</dimen>
